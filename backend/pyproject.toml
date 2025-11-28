@@ -1,0 +1,16 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.2.8",
+    "django-redis>=6.0.0",
+    "djangorestframework>=3.16.1",
+    "djangorestframework-simplejwt>=5.5.1",
+    "pillow>=12.0.0",
+    "psycopg2-binary>=2.9.11",
+    "redis>=7.1.0",
+    "uvicorn>=0.38.0",
+]
