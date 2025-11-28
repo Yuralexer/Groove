@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from .models import Track, Artist, Album
 from .serializers import (
@@ -20,6 +22,7 @@ class ArtistListAPIView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     parser_classes = [MultiPartParser, FormParser]
 
+    @method_decorator(cache_page(60 * 5, key_prefix='artist_list'))
     def get(self, request):
         artists = Artist.objects.all()
         search_query = request.query_params.get('search', None)
@@ -46,6 +49,7 @@ class ArtistListAPIView(APIView):
 class ArtistDetailAPIView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    @method_decorator(cache_page(60 * 5, key_prefix='artist_detail'))
     def get(self, request, pk):
         artist = get_object_or_404(Artist, pk=pk)
         serializer = ArtistDetailSerializer(artist, context={'request': request})
@@ -56,6 +60,7 @@ class AlbumListAPIView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     parser_classes = [MultiPartParser, FormParser]
 
+    @method_decorator(cache_page(60 * 5, key_prefix='album_list'))
     def get(self, request):
         queryset = Album.objects.all()
         
@@ -88,6 +93,7 @@ class AlbumListAPIView(APIView):
 class AlbumDetailAPIView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    @method_decorator(cache_page(60 * 5, key_prefix='album_detail'))
     def get(self, request, pk):
         album = get_object_or_404(Album, pk=pk)
         serializer = AlbumDetailSerializer(album, context={'request': request})
@@ -97,6 +103,7 @@ class AlbumDetailAPIView(APIView):
 class TrackListAPIView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    @method_decorator(cache_page(60 * 5, key_prefix='track_list'))
     def get(self, request):
         queryset = Track.objects.all()
         search_query = request.query_params.get('search', None)
