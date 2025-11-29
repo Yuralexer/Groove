@@ -109,6 +109,12 @@ class TrackListAPIView(APIView):
         search_query = request.query_params.get('search', None)
         tag_slug = request.query_params.get('tag', None)
 
+        artist_id = request.query_params.get('artist_id', None)
+
+        if artist_id:
+            queryset = queryset.filter(album__artist_id=artist_id)
+            queryset = queryset.order_by('-plays_count')
+
         if search_query:
             queryset = queryset.filter(
                 Q(title__icontains=search_query) |
@@ -117,6 +123,9 @@ class TrackListAPIView(APIView):
 
         if tag_slug:
             queryset = queryset.filter(tags__slug=tag_slug)
+
+        if not artist_id:
+            queryset = queryset.order_by('-id').distinct()
 
         queryset = queryset.order_by('-id').distinct()
         serializer = TrackSerializer(queryset, many=True, context={'request': request})

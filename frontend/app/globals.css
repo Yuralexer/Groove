@@ -1,0 +1,53 @@
+/* Сброс стандартных отступов */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Твоя палитра из Figma */
+  --bg-color: #121212;          /* Основной фон */
+  --sidebar-bg: #000000;        /* Сайдбар */
+  --surface-color: #181818;     /* Карточки */
+  --surface-hover: #282828;     /* Карточки при наведении */
+  --text-primary: #FFFFFF;      /* Белый текст */
+  --text-secondary: #B3B3B3;    /* Серый текст */
+  --accent-color: #7B61FF;      /* Твой фиолетовый акцент (примерно) */
+  
+  /* Размеры */
+  --sidebar-width: 250px;
+  --player-height: 90px;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow: hidden; /* Чтобы скроллился только контент, а не вся страница */
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+@keyframes scrollText {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(0); } /* Пауза в начале */
+  100% { transform: translateX(-100%); }
+}
+
+.marqueeWrapper {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  mask-image: linear-gradient(to right, black 0%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 0%, black 85%, transparent 100%);
+}
+
+.marqueeWrapper:hover .marqueeContent {
+  display: inline-block;
+  animation: scrollText 8s linear infinite;
+  padding-right: 50px; /* Отступ, чтобы текст не слипался при повторе */
+}

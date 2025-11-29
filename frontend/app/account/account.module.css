@@ -1,0 +1,141 @@
+.container {
+    padding: 40px;
+    min-height: 100%;
+    background: linear-gradient(180deg, #202020 0%, var(--bg-color) 100%);
+    color: white;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* Сетка: Слева инфо, Справа формы */
+.grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* Карточка профиля (слева) */
+.profileCard {
+    background-color: #181818;
+    border-radius: 8px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.usernameDisplay {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.emailDisplay {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* Секция форм (справа) */
+.section {
+    background-color: #181818;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.sectionTitle {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+.label {
+    display: block;
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 8px;
+}
+
+.input {
+    width: 100%;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    color: white;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.input:focus {
+    border-color: white;
+    outline: none;
+}
+
+/* Кнопки */
+.btn {
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+    font-size: 14px;
+}
+
+.btnPrimary {
+    background-color: var(--accent-color, #7B61FF);
+    color: white;
+}
+.btnPrimary:hover {
+    filter: brightness(1.1);
+}
+
+.btnDanger {
+    background-color: transparent;
+    border: 1px solid #ff4444;
+    color: #ff4444;
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.btnDanger:hover {
+    background-color: rgba(255, 68, 68, 0.1);
+}
+
+.message {
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+.success { background: rgba(0, 255, 0, 0.1); color: #4caf50; }
+.error { background: rgba(255, 0, 0, 0.1); color: #ff5252; }

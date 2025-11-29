@@ -9,9 +9,11 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class TrackSerializer(serializers.ModelSerializer):
+    cover = serializers.ImageField(source='album.cover', read_only=True)
+    artist = serializers.CharField(source='album.artist.name', read_only=True)
     class Meta:
         model = Track
-        fields = ['id', 'title', 'file', 'duration', 'order', 'plays_count']
+        fields = ['id', 'title', 'file', 'duration', 'order', 'plays_count', 'cover', 'artist']
 
 
 class AlbumListSerializer(serializers.ModelSerializer):

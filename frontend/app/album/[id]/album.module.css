@@ -1,0 +1,99 @@
+.container {
+    padding: 0 0 40px 0;
+    min-height: 100%;
+    background: linear-gradient(180deg, rgba(60,60,60,1) 0%, var(--bg-color) 600px);
+}
+
+/* Шапка альбома */
+.header {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    padding: 80px 32px 24px 32px;
+}
+
+.cover {
+    width: 232px;
+    height: 232px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 4px 60px rgba(0,0,0,0.5);
+    background-color: #333;
+    background-size: cover;
+    background-position: center;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.type {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    white-space: nowrap;
+}
+
+.titleWrapper {
+    max-width: 800px; 
+    overflow: hidden;
+}
+
+.meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Список треков */
+.trackList {
+    padding: 24px 32px;
+    background: rgba(0,0,0,0.2); /* Затемнение списка */
+}
+
+.trackRow {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px; /* Номер - Название - Время */
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 4px;
+    color: #b3b3b3;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.trackRow:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: white;
+}
+
+.trackNum {
+    font-size: 16px;
+    text-align: center;
+}
+
+.trackTitle {
+    font-size: 16px;
+    color: white;
+}
+
+.trackArtist {
+    font-size: 14px;
+    color: #b3b3b3;
+}
+
+.activeTrack {
+    color: var(--accent-color); /* Зеленый/Фиолетовый, если трек играет */
+}

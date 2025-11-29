@@ -1,0 +1,103 @@
+.container {
+    padding: 0 0 40px 0;
+    min-height: 100%;
+    background: linear-gradient(180deg, rgba(80,80,80,1) 0%, var(--bg-color) 600px);
+}
+
+.header {
+    display: flex;
+    align-items: center; /* По центру вертикально */
+    gap: 32px;
+    padding: 80px 32px 40px 32px;
+}
+
+.artistImage {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%; /* Круг */
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    background-color: #333;
+    flex-shrink: 0;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+}
+
+.verified {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.name {
+    font-size: 5rem;
+    font-weight: 900;
+    margin: 0;
+    line-height: 1;
+}
+
+.stats {
+    margin-top: 16px;
+    font-size: 16px;
+}
+
+/* Секции */
+.section {
+    padding: 20px 32px;
+}
+
+.sectionTitle {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* Треки (копируем стили из альбома или поиска) */
+.trackList {
+    display: flex;
+    flex-direction: column;
+}
+
+.trackRow {
+    display: grid;
+    grid-template-columns: 40px 1fr 100px; /* Индекс - Инфо - Время */
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.trackRow:hover { background-color: rgba(255,255,255,0.1); }
+
+.trackNum { color: #b3b3b3; text-align: center; }
+.trackTitle { font-size: 16px; color: white; }
+.trackPlays { font-size: 14px; color: #b3b3b3; }
+.activeText { color: var(--accent-color); }
+
+/* Сетка альбомов */
+.albumGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+}
+/* ... стили карточки альбома можно переиспользовать или скопировать из search.module.css ... */
+.albumCard {
+    background: #181818;
+    padding: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.albumCard:hover { background: #282828; }
+.albumCover {
+    width: 100%; aspect-ratio: 1/1; border-radius: 4px;
+    background-size: cover; background-position: center; margin-bottom: 12px;
+}
+.albumTitle { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.albumYear { font-size: 14px; color: #b3b3b3; }

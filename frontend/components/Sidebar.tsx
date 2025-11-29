@@ -1,0 +1,72 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Home, Search, Library, Heart, User, LogIn } from "lucide-react";
+import { useAuthStore } from "@/store/useAuthStore"; // <--- Импорт
+import { useEffect } from "react";
+import styles from "./Sidebar.module.css";
+
+const navigation = [
+  // ... (массив навигации оставляем как был)
+  { name: "Главная", href: "/", icon: Home },
+  { name: "Поиск", href: "/search", icon: Search },
+  { name: "Библиотека", href: "/library", icon: Library },
+  { name: "Любимое", href: "/collection", icon: Heart },
+];
+
+export default function Sidebar() {
+  const pathname = usePathname();
+  // Достаем состояние из хранилища
+  const { user, isAuthenticated, checkAuth } = useAuthStore();
+
+  // При первой загрузке проверяем, есть ли токен
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  return (
+    <div className={styles.sidebar}>
+      <div className={styles.logo}>
+        <span>Groove</span>
+      </div>
+
+      <nav className={styles.nav}>
+        {navigation.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`${styles.link} ${isActive ? styles.active : ""}`}
+            >
+              <item.icon size={24} />
+              <span>{item.name}</span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      <div className={styles.profile}>
+        {isAuthenticated ? (
+            // Если вошли - ссылка на аккаунт
+            <Link href="/account" className={styles.link}>
+                <div style={{ background: "#333", borderRadius: "50%", padding: 5 }}>
+                    <User size={20} />
+                </div>
+                {/* Если имя загрузилось - показываем, если нет (токен есть, а запроса профиля еще не было) - "Мой аккаунт" */}
+                <span>{user?.username || "Мой аккаунт"}</span>
+            </Link>
+        ) : (
+            // Если НЕ вошли - кнопка на логин
+            <Link href="/login" className={styles.link}>
+                <div style={{ background: "#333", borderRadius: "50%", padding: 5 }}>
+                    <LogIn size={20} />
+                </div>
+                <span>Войти</span>
+            </Link>
+        )}
+      </div>
+    </div>
+  );
+}

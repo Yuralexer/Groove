@@ -1,0 +1,71 @@
+.container {
+  padding: 32px;
+  /* Градиент на фоне сверху, как в Spotify */
+  background: linear-gradient(180deg, rgba(30,30,30,1) 0%, var(--bg-color) 40%);
+  min-height: 100%;
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* Сетка для карточек "Недавно слушали" */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Адаптивная сетка */
+  gap: 16px;
+}
+
+/* Сама карточка */
+.card {
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 6px; /* Чуть скруглим углы */
+  display: flex;
+  align-items: center;
+  overflow: hidden; /* Чтобы картинка не вылезала за скругления */
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  height: 80px; /* Фиксируем высоту карточки */
+  padding: 0;   /* ВАЖНО: Убираем любые внутренние отступы у самой карточки */
+}
+
+.card:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.cardImage {
+  height: 100%;       /* На всю высоту карточки */
+  width: 80px;        /* Квадрат */
+  flex-shrink: 0;     /* Не сжимать картинку */
+  background-color: #333;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Новая обертка для текста внутри карточки */
+.cardContent {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Магия Flexbox: min-width: 0 нужна, чтобы дочерний marquee понимал, что места мало */
+  flex: 1; 
+  min-width: 0; 
+}
+
+.cardTitle {
+  font-weight: 600;
+  font-size: 16px;
+}

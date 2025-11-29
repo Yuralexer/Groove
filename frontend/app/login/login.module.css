@@ -1,0 +1,76 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* На всю высоту экрана */
+    width: 100%;
+}
+
+.formBox {
+    background-color: #181818;
+    padding: 40px;
+    border-radius: 8px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #b3b3b3;
+}
+
+.input {
+    background-color: #333;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 12px;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.input:focus {
+    border-color: white;
+    background-color: #404040;
+}
+
+.button {
+    background-color: var(--accent-color); /* Наш фиолетовый */
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 50px; /* Круглая кнопка как в Spotify */
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.1s;
+}
+
+.button:active {
+    transform: scale(0.98);
+}
+
+.error {
+    color: #ff5555;
+    font-size: 14px;
+    text-align: center;
+}
