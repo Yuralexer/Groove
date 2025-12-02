@@ -27,6 +27,77 @@
     width: 30%;
 }
 
+.trackActions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.actionButton {
+    background: transparent;
+    border: none;
+    color: #cfcfcf;
+    padding: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.actionButton:hover {
+    background: rgba(255,255,255,0.02);
+}
+
+.liked {
+    color: #ff6b6b;
+}
+
+.menuWrapper {
+    position: relative;
+}
+
+.menu {
+    position: absolute;
+    right: 0;
+    bottom: 32px;
+    background: linear-gradient(180deg, #111, #0b0b0b);
+    border-radius: 8px;
+    padding: 8px;
+    min-width: 200px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.03);
+    z-index: 1000;
+}
+
+.menuItem {
+    padding: 8px;
+    border-radius: 6px;
+    color: #ddd;
+}
+
+.menuItem:hover {
+    background: rgba(255,255,255,0.02);
+}
+
+.submenuArrow {
+    float: right;
+    color: #888;
+}
+
+.submenu {
+    position: absolute;
+    left: -220px;
+    bottom: 0;
+    background: linear-gradient(180deg, #111, #0b0b0b);
+    border-radius: 8px;
+    padding: 8px;
+    min-width: 200px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.03);
+    z-index: 1001;
+}
+
 .cover {
     width: 56px;
     height: 56px;
@@ -78,6 +149,15 @@
 
 .iconButton:hover {
     color: white;
+}
+
+.iconButton.disabled {
+    color: #555;
+    cursor: not-allowed;
+}
+
+.iconButton.disabled:hover {
+    color: #555;
 }
 
 .progressBarContainer {

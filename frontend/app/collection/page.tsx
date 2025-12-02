@@ -62,7 +62,7 @@ export default function FavoritesPage() {
                         <div 
                             key={track.id} 
                             className={styles.trackRow}
-                            onClick={() => playTrack(track)}
+                            onClick={() => playTrack(track, playlist.tracks, 'playlist')}
                         >
                             <div className={styles.trackNum}>{isCurrent ? "▶" : index + 1}</div>
                             

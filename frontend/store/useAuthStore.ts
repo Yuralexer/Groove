@@ -9,25 +9,27 @@ interface User {
 interface AuthState {
     user: User | null;
     isAuthenticated: boolean;
+    authChecked: boolean;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
-    checkAuth: () => void;
+    checkAuth: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
     user: null,
     isAuthenticated: false,
+    authChecked: false,
 
     login: async (email, password) => {
         try {
             const response = await api.post('/auth/login/', { email, password });
-            
-            const { tokens, ...user } = response.data;
+            const tokens = response.data.tokens;
+            const user = response.data.user || response.data;
 
             localStorage.setItem('access_token', tokens.access);
             localStorage.setItem('refresh_token', tokens.refresh);
 
-            set({ user, isAuthenticated: true });
+            set({ user, isAuthenticated: true, authChecked: true });
         } catch (error) {
             console.error("Login failed", error);
             throw error;
@@ -40,10 +42,23 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ user: null, isAuthenticated: false });
     },
 
-    checkAuth: () => {
+    checkAuth: async () => {
         const token = localStorage.getItem('access_token');
-        if (token) {
-            set({ isAuthenticated: true });
+        if (!token) {
+            set({ user: null, isAuthenticated: false, authChecked: true });
+            return;
+        }
+
+        try {
+            // Try to fetch current user profile from the server
+            const res = await api.get('/auth/update-profile/');
+            const user = res.data;
+            set({ user, isAuthenticated: true, authChecked: true });
+        } catch (err) {
+            // Token invalid or expired — clear and mark unauthenticated
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            set({ user: null, isAuthenticated: false, authChecked: true });
         }
     }
 }));

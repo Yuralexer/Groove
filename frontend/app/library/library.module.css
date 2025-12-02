@@ -9,6 +9,90 @@
     margin-bottom: 24px;
 }
 
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.createButton {
+    background: linear-gradient(90deg,#7b5cff,#5a44d9);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(90,68,217,0.18);
+}
+
+.createWrapper {
+    position: relative;
+}
+
+.createPanel {
+    position: absolute;
+    right: 0;
+    top: 48px;
+    background: linear-gradient(180deg, rgba(20,20,20,0.95), rgba(14,14,14,0.95));
+    padding: 16px;
+    border-radius: 10px;
+    width: 360px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+    z-index: 60;
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.preview {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.primary {
+    background: linear-gradient(90deg,#7b5cff,#5a44d9);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.secondary {
+    background: transparent;
+    color: #cfcfcf;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.03);
+    cursor: pointer;
+}
+
+.error {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));

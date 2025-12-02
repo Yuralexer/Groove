@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { playlistApi, Playlist } from "@/lib/playlists";
+import CreatePlaylistMenu from "./CreatePlaylistMenu";
 import { getImageUrl } from "@/lib/music";
 import { Heart, Music } from "lucide-react";
 import styles from "./library.module.css"; // Стиль создадим ниже
@@ -22,7 +23,20 @@ export default function LibraryPage() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Моя медиатека</h1>
+            <div className={styles.header}>
+                <h1 className={styles.title}>Моя медиатека</h1>
+                <CreatePlaylistMenu onCreated={async () => {
+                    setLoading(true);
+                    try {
+                        const pls = await playlistApi.getMyPlaylists();
+                        setPlaylists(pls);
+                    } catch (e) {
+                        console.error(e);
+                    } finally {
+                        setLoading(false);
+                    }
+                }} />
+            </div>
 
             <div className={styles.grid}>
                 {/* Специальная карточка для "Любимых треков", если мы хотим её дублировать тут */}
@@ -32,7 +46,7 @@ export default function LibraryPage() {
                 {playlists.map(playlist => {
                     // Если это "Любимое", ссылка ведет на спец. страницу, иначе на обычную
                     const href = playlist.is_favorite 
-                        ? "/collection/tracks" 
+                        ? "/collection/" 
                         : `/playlist/${playlist.id}`;
 
                     return (

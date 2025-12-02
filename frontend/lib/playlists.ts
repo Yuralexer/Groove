@@ -36,4 +36,35 @@ export const playlistApi = {
     removeTrack: async (playlistId: number, trackId: number) => {
         return api.delete(`/playlists/${playlistId}/tracks/${trackId}/`);
     }
+,
+    // Создать плейлист (multipart/form-data)
+    createPlaylist: async (formData: FormData) => {
+        return api.post('/playlists/my/', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+    }
+,
+    updatePlaylist: async (id: number, formData: FormData) => {
+        return api.patch(`/playlists/${id}/`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+    },
+
+    deletePlaylist: async (id: number) => {
+        return api.delete(`/playlists/${id}/`);
+    },
+
+    // Добавить трек в "Любимое"
+    addToFavorite: async (trackId: number) => {
+        return api.post(`/playlists/favorite/${trackId}/`);
+    },
+
+    // Удалить трек из "Любимое"
+    removeFromFavorite: async (trackId: number) => {
+        return api.delete(`/playlists/favorite/${trackId}/`);
+    }
 };
+// Экспорт в объект для обратной совместимости
+export default playlistApi;

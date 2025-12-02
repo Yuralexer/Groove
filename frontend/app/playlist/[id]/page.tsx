@@ -8,6 +8,8 @@ import { getImageUrl } from "@/lib/music";
 import { formatTime } from "@/lib/utils";
 import { Music } from "lucide-react"; // Иконка ноты для заглушки
 import styles from "./playlist.module.css";
+import Link from "next/link";
+import TrackRow from "@/components/TrackRow";
 
 export default function PlaylistPage() {
     const params = useParams();
@@ -55,6 +57,11 @@ export default function PlaylistPage() {
                     <div className={styles.type}>Плейлист</div>
                     {/* Настоящее название плейлиста */}
                     <h1 className={styles.title}>{playlist.title}</h1>
+                    <div style={{ marginTop: 12 }}>
+                        {!playlist.is_favorite && (
+                            <Link href={`/playlist/${playlist.id}/edit`} className={styles.editButton}>Изменить</Link>
+                        )}
+                    </div>
                     <div className={styles.meta}>
                         {playlist.owner} • {playlist.tracks.length} треков
                     </div>
@@ -67,31 +74,9 @@ export default function PlaylistPage() {
             {/* Треки */}
             <div className={styles.trackList}>
                 {playlist.tracks.map((track, index) => {
-                    const isCurrent = activeTrack?.id === track.id;
                     return (
-                        <div 
-                            key={track.id} 
-                            className={styles.trackRow}
-                            onClick={() => playTrack(track)}
-                        >
-                            <div className={styles.trackNum}>{isCurrent ? "▶" : index + 1}</div>
-                            
-                            <div 
-                                className={styles.trackImage}
-                                style={{ backgroundImage: track.cover ? `url(${getImageUrl(track.cover)})` : undefined }}
-                            >
-                                {!track.cover && "♫"}
-                            </div>
-
-                            <div className={styles.trackInfo}>
-                                <div className={`${styles.trackTitle} ${isCurrent ? styles.activeText : ''}`}>
-                                    {track.title}
-                                </div>
-                                <div className={styles.trackArtist}>
-                                    {track.artist || "Неизвестен"}
-                                </div>
-                            </div>
-                            <div className={styles.trackTime}>{formatTime(track.duration)}</div>
+                        <div key={track.id}>
+                            <TrackRow track={track} queue={playlist.tracks} context="playlist" />
                         </div>
                     );
                 })}

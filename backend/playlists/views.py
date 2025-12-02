@@ -1,15 +1,18 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.shortcuts import get_object_or_404
 
 from .models import Playlist
 from music.models import Track
 from .serializers import PlaylistListSerializer, PlaylistDetailSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 class MyPlaylistListAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def get(self, request):
         playlists = Playlist.objects.filter(owner=request.user)
@@ -26,6 +29,7 @@ class MyPlaylistListAPIView(APIView):
 
 class PlaylistDetailAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def get_object(self, pk, user):
         return get_object_or_404(Playlist, pk=pk, owner=user)
@@ -34,6 +38,24 @@ class PlaylistDetailAPIView(APIView):
         playlist = self.get_object(pk, request.user)
         serializer = PlaylistDetailSerializer(playlist, context={'request': request})
         return Response(serializer.data)
+
+    def put(self, request, pk):
+        """Полное обновление плейлиста (title, cover, description)."""
+        playlist = self.get_object(pk, request.user)
+        serializer = PlaylistListSerializer(playlist, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        """Частичное обновление плейлиста."""
+        playlist = self.get_object(pk, request.user)
+        serializer = PlaylistListSerializer(playlist, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         playlist = self.get_object(pk, request.user)
@@ -47,6 +69,28 @@ class PlaylistDetailAPIView(APIView):
         playlist.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+
+class FavoritePlaylistAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, track_id):
+        """Добавить трек в плейлист 'Любимое' пользователя (создаётся, если отсутствует)."""
+        user = request.user
+        track = get_object_or_404(Track, pk=track_id)
+
+        fav, created = Playlist.objects.get_or_create(owner=user, is_favorite=True, defaults={'title': 'Любимое'})
+        fav.tracks.add(track)
+        return Response({'status': 'added', 'playlist_id': fav.id}, status=status.HTTP_200_OK)
+
+    def delete(self, request, track_id):
+        user = request.user
+        track = get_object_or_404(Track, pk=track_id)
+        fav = Playlist.objects.filter(owner=user, is_favorite=True).first()
+        if not fav:
+            return Response({'status': 'not_found'}, status=status.HTTP_404_NOT_FOUND)
+        fav.tracks.remove(track)
+        return Response({'status': 'removed', 'playlist_id': fav.id}, status=status.HTTP_200_OK)
+
 
 class PlaylistTrackAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]

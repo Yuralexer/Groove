@@ -52,11 +52,15 @@ export default function AlbumPage() {
 
     // Функция запуска трека
     const handlePlay = (track: AlbumDetail['tracks'][0]) => {
-        playTrack({
-            ...track, // Копируем данные трека
-            cover: album.cover, // Добавляем обложку альбома вручную!
-            artist: album.artist // И имя артиста
-        });
+        const t = {
+            ...track,
+            cover: album.cover,
+            artist: album.artist
+        };
+
+        // Build queue with album tracks enriched with cover/artist
+        const queue = album.tracks.map(tr => ({ ...tr, cover: album.cover, artist: album.artist }));
+        playTrack(t, queue, 'album');
     };
 
     return (

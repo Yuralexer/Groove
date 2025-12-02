@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { musicApi, Track, Album, Artist, getImageUrl } from "@/lib/music";
+import TrackRow from "@/components/TrackRow";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { formatTime } from "@/lib/utils";
 import { Search as SearchIcon } from "lucide-react";
@@ -117,36 +118,11 @@ export default function SearchPage() {
 
                     {/* Секция: Треки */}
                     {tracks.map(track => {
-                        const isCurrent = activeTrack?.id === track.id;
                         return (
-                            <div 
-                                key={track.id} 
-                                className={styles.trackRow}
-                                onClick={() => playTrack(track)}
-                            >
-                                {/* Картинка трека (обложка альбома) */}
-                                <div 
-                                    className={styles.trackImage} 
-                                    style={{ 
-                                        backgroundImage: track.cover ? `url(${getImageUrl(track.cover)})` : undefined,
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center'
-                                    }}
-                                >
-                                    {/* Если вдруг обложки нет - показываем ноту */}
-                                    {!track.cover && "♫"}
-                                </div>
-
-                                <div className={styles.trackInfo}>
-                                    <div className={`${styles.trackTitle} ${isCurrent ? styles.activeText : ''}`}>
-                                        {track.title}
-                                    </div>
-                                    <div className={styles.trackArtist}>
-                                        {/* Теперь здесь будет реальное имя артиста */}
-                                        {track.artist || "Неизвестный исполнитель"}
-                                    </div>
-                                </div>
-                                <div className={styles.trackTime}>{formatTime(track.duration)}</div>
+                            <div key={track.id}>
+                                {/* Using reusable TrackRow component */}
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <TrackRow track={track} queue={tracks} context="search" />
                             </div>
                         )
                     })}

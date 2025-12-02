@@ -73,7 +73,7 @@ export default function ArtistPage() {
                             <div 
                                 key={track.id} 
                                 className={styles.trackRow}
-                                onClick={() => playTrack(track)}
+                                onClick={() => playTrack(track, topTracks, 'playlist')}
                             >
                                 <div className={styles.trackNum}>
                                     {isCurrent ? "▶" : index + 1}

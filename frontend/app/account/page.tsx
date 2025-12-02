@@ -8,7 +8,7 @@ import { User as UserIcon, LogOut, Key, Save } from "lucide-react";
 import styles from "./account.module.css";
 
 export default function AccountPage() {
-    const { user, logout, isAuthenticated, checkAuth } = useAuthStore();
+    const { user, logout, isAuthenticated, checkAuth, authChecked } = useAuthStore();
     const router = useRouter();
 
     // Состояния форм
@@ -21,9 +21,21 @@ export default function AccountPage() {
     const [passMsg, setPassMsg] = useState<{type: 'success'|'error', text: string} | null>(null);
 
     useEffect(() => {
-        if (!isAuthenticated) router.push("/login");
-        if (user) setNewUsername(user.username);
-    }, [isAuthenticated, user, router]);
+        // Ensure we run the auth check on mount. The redirect to /login
+        // should only happen after the initial auth check completes (authChecked)
+        // to avoid brief false-redirects on page reload.
+        checkAuth();
+    }, [checkAuth]);
+
+    useEffect(() => {
+        // After initial auth check finished, redirect if not authenticated.
+        if (authChecked && !isAuthenticated) {
+            router.push('/login');
+            return;
+        }
+
+        if (isAuthenticated && user) setNewUsername(user.username || "");
+    }, [authChecked, isAuthenticated, user, router]);
 
     const handleLogout = () => {
         logout();
@@ -98,7 +110,7 @@ export default function AccountPage() {
                                 <input 
                                     type="text" 
                                     className={styles.input}
-                                    value={newUsername}
+                                    value={newUsername || ""}
                                     onChange={(e) => setNewUsername(e.target.value)}
                                 />
                             </div>

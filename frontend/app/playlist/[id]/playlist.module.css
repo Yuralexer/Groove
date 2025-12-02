@@ -31,6 +31,104 @@
 .title { font-size: 4rem; font-weight: 900; margin: 0; line-height: 1; }
 .meta { font-size: 14px; font-weight: 600; color: #ddd; }
 
+.editContainer {
+    padding: 32px;
+    background: linear-gradient(180deg, rgba(10,10,10,0.9), rgba(8,8,8,0.9));
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 24px;
+}
+
+.input {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.03);
+    color: #fff;
+    border-radius: 8px;
+}
+
+.textareaStyled {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.03);
+    color: #ddd;
+    border-radius: 8px;
+}
+
+.saveButton {
+    background: linear-gradient(90deg,#7b5cff,#5a44d9);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.cancelButton {
+    background: transparent;
+    color: #cfcfcf;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.03);
+    cursor: pointer;
+}
+
+.dangerButton {
+    background: #ff4d4f;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.previewBox {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+    background: #1b1b1b;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+.label { font-weight: 700; color: #ddd; margin-bottom: 8px; }
+
+.editButton {
+    display: inline-block;
+    background: rgba(255,255,255,0.04);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+.primary { /* compatibility with some components */
+    composes: saveButton;
+}
+
+.secondary { /* compatibility */
+    composes: cancelButton;
+}
+.editButton {
+    display: inline-block;
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
 /* Список треков (стандартный) */
 .trackList { padding: 24px 32px; background: rgba(0,0,0,0.1); }
 .trackRow { display: grid; grid-template-columns: 40px 50px 1fr 60px; align-items: center; padding: 8px 16px; border-radius: 4px; cursor: pointer; gap: 16px; }

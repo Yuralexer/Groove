@@ -1,0 +1,18 @@
+.row{display:grid;grid-template-columns:40px 50px 1fr 120px;align-items:center;padding:8px 12px;border-radius:6px;gap:12px;cursor:pointer}
+.row:hover{background:rgba(255,255,255,0.03)}
+.num{color:#ddd;text-align:center}
+.image{width:48px;height:48px;background:#2b2b2b;border-radius:6px;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#aaa}
+.info{display:flex;flex-direction:column}
+.title{font-size:15px;color:#fff;font-weight:600}
+.artist{font-size:13px;color:#bfbfbf}
+.actions{display:flex;align-items:center;gap:8px;justify-self:end}
+.iconButton{background:transparent;border:none;color:#cfcfcf;padding:6px;border-radius:6px;cursor:pointer}
+.iconButton:hover{background:rgba(255,255,255,0.02)}
+.liked{color:#ff6b6b}
+.menuWrapper{position:relative}
+.menu{position:absolute;right:0;top:32px;background:linear-gradient(180deg,#111,#0b0b0b);border-radius:8px;padding:8px;min-width:200px;box-shadow:0 8px 30px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03)}
+.menuItem{padding:8px;border-radius:6px;color:#ddd}
+.menuItem:hover{background:rgba(255,255,255,0.02)}
+.submenu{position:absolute;left:-220px;top:0;background:linear-gradient(180deg,#111,#0b0b0b);border-radius:8px;padding:8px;min-width:200px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03)}
+.submenuArrow{float:right;color:#888}
+.time{color:#b3b3b3;font-variant-numeric:tabular-nums}
