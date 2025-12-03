@@ -6,7 +6,7 @@ import Link from "next/link";
 import { musicApi, Artist, Track, getImageUrl } from "@/lib/music";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { formatTime } from "@/lib/utils";
-import { BadgeCheck } from "lucide-react"; // Иконка "Галочка"
+import { BadgeCheck } from "lucide-react";
 import styles from "./artist.module.css";
 
 export default function ArtistPage() {
@@ -56,10 +56,6 @@ export default function ArtistPage() {
                         Подтвержденный исполнитель
                     </div>
                     <h1 className={styles.name}>{artist.name}</h1>
-                    <div className={styles.stats}>
-                        {/* Пока заглушка про слушателей, можно потом считать plays_count всех треков */}
-                        2,543,120 слушателей за месяц
-                    </div>
                 </div>
             </div>
 

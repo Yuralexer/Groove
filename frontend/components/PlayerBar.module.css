@@ -3,11 +3,11 @@
   bottom: 0;
   left: var(--sidebar-width); 
   
-  width: calc(100% - var(--sidebar-width)); 
+  width: calc(100% - var(--sidebar-width) - 30px); 
   
   height: var(--player-height);
   
-  background-color: rgba(18, 18, 18, 0.7);
+  background-color: rgb(123 97 255 / 5%);
   backdrop-filter: blur(20px);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   
@@ -17,6 +17,12 @@
   padding: 0 24px;
   z-index: 100;
   gap: 20px; 
+
+  border-bottom: solid 2px #7b61ff2a;
+  border-left: solid 2px #7b61ff2a;
+  border-right: solid 2px #7b61ff2a;
+  margin: 0 5px 5px 5px;
+  border-radius: 4px 4px 10px 10px;
 }
 
 .trackInfo {
@@ -55,6 +61,7 @@
 
 .menuWrapper {
     position: relative;
+    z-index: 2000;
 }
 
 .menu {
@@ -67,7 +74,7 @@
     min-width: 200px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.6);
     border: 1px solid rgba(255,255,255,0.03);
-    z-index: 1000;
+    z-index: 2001;
 }
 
 .menuItem {
@@ -95,7 +102,7 @@
     min-width: 200px;
     box-shadow: 0 12px 40px rgba(0,0,0,0.6);
     border: 1px solid rgba(255,255,255,0.03);
-    z-index: 1001;
+    z-index: 2002;
 }
 
 .cover {
@@ -112,8 +119,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 40%; /* Центр */
-    gap: 8px;
+    width: 40%;
 }
 
 .buttons {
@@ -162,32 +168,29 @@
 
 .progressBarContainer {
     position: absolute;
-    top: -4px; /* Чуть выше края, чтобы было удобно хватать */
+    top: 0px;
     left: 0;
     width: 100%;
     height: 4px;
     background: rgba(255,255,255,0.1);
     cursor: pointer;
     z-index: 101;
+    border-radius: 4px;
+
+    transition: height 0.2s ease-in-out;
 }
 
 .progressBarFill {
     height: 100%;
-    background-color: var(--accent-color, #7B61FF); /* Цвет заполнения */
+    background-color: var(--accent-color, #7B61FF);
     position: relative;
+    border-radius: 4px 0 0 4px;
 }
 
-/* Кружочек на конце прогресса (появляется при наведении на бар) */
-.progressBarContainer:hover .progressBarFill::after {
-    content: '';
-    position: absolute;
-    right: -6px;
-    top: -4px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+.progressBarContainer:hover {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    transition: height 0.2s ease-in-out;
 }
 
 /* Настоящий input range (невидимый, но рабочий) поверх всего */
@@ -216,12 +219,11 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    /* Магия ховера */
 }
 
 /* Слайдер громкости */
 .volumeSlider {
-    width: 0; /* Скрыт по умолчанию */
+    width: 0;
     overflow: hidden;
     transition: width 0.2s ease;
     display: flex;
@@ -231,7 +233,7 @@
 /* Раскрываем при наведении на иконку ИЛИ на сам слайдер */
 .volumeWrapper:hover .volumeSlider, 
 .volumeSlider:hover {
-    width: 100px; /* Раскрываем */
+    width: 100px;
 }
 
 /* Стилизация стандартного range input для громкости */
@@ -240,15 +242,35 @@
     width: 100%;
     height: 4px;
     border-radius: 2px;
-    background: rgba(255,255,255,0.3);
+    background: linear-gradient(to right, var(--accent-color, #7B61FF) 0%, var(--accent-color, #7B61FF) var(--value), rgba(255,255,255,0.3) var(--value), rgba(255,255,255,0.3) 100%);
     outline: none;
+    cursor: pointer;
+    transition: height 0.2s ease;
 }
 
+.rangeInput:hover {
+    height: 8px;
+    border-radius: 2px;
+}
+
+/* WebKit браузеры (Chrome, Safari, Edge) - скрываем большой палец */
 .rangeInput::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: white;
+    width: 0;
+    height: 0;
     cursor: pointer;
+}
+
+/* Firefox - скрываем большой палец */
+.rangeInput::-moz-range-track {
+    background: transparent;
+    border: none;
+}
+
+.rangeInput::-moz-range-thumb {
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    border: none;
+    background: transparent;
 }

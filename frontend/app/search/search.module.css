@@ -51,18 +51,19 @@
 }
 
 .artistCard {
-    background: #181818;
+    background: #19191A;
     padding: 20px;
-    border-radius: 8px;
+    border: solid 2px #262528;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: 0.3s;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
     cursor: pointer;
 }
 
 .artistCard:hover {
-    background: #282828;
+    background: #262528;
 }
 
 .artistImage {
@@ -95,15 +96,16 @@
 }
 
 .albumCard {
-    background: #181818;
+    background: #19191A;
     padding: 16px;
-    border-radius: 8px;
-    transition: 0.3s;
+    border: solid 2px #262528;
+    border-radius: 10px;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
     cursor: pointer;
 }
 
 .albumCard:hover {
-    background: #282828;
+    background: #262528;
 }
 
 .albumImage {

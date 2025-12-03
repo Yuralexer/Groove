@@ -16,7 +16,7 @@ export default function PlayerBar() {
     // Локальные состояния для UI
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [volume, setVolume] = useState(0.5);
+    const [volume, setVolume] = useState(1);
     const [isMuted, setIsMuted] = useState(false);
     const [prevVolume, setPrevVolume] = useState(0.5); // Чтобы вернуть громкость после Unmute
     const [isFavorite, setIsFavorite] = useState(false);
@@ -25,6 +25,46 @@ export default function PlayerBar() {
     const [playlists, setPlaylists] = useState<any[]>([]);
     const [playlistMembership, setPlaylistMembership] = useState<Record<number, boolean>>({});
     const menuRef = useRef<HTMLDivElement | null>(null);
+    const isSeeking = useRef(false); // Флаг для отслеживания перемотки
+
+    // Инициализация Media Session API для управления с наушников
+    useEffect(() => {
+        if (!('mediaSession' in navigator) || !activeTrack) return;
+
+        const media = navigator.mediaSession;
+        
+        // Обновляем информацию о текущей песне
+        media.metadata = new MediaMetadata({
+            title: activeTrack.title,
+            artist: activeTrack.artist || 'Неизвестен',
+            album: activeTrack.album || '',
+            artwork: activeTrack.cover ? [
+                { src: getImageUrl(activeTrack.cover), sizes: '96x96', type: 'image/jpeg' }
+            ] : []
+        });
+
+        // Устанавливаем обработчики
+        media.setActionHandler('play', () => togglePlay());
+        media.setActionHandler('pause', () => togglePlay());
+        media.setActionHandler('nexttrack', () => {
+            if (canPlayNext()) {
+                playNext();
+            }
+        });
+        media.setActionHandler('previoustrack', () => {
+            if (canPlayPrevious()) {
+                playPrevious();
+            }
+        });
+
+        // Чистка: удаляем обработчики при размонтировании или изменении трека
+        return () => {
+            media.setActionHandler('play', null);
+            media.setActionHandler('pause', null);
+            media.setActionHandler('nexttrack', null);
+            media.setActionHandler('previoustrack', null);
+        };
+    }, [activeTrack, togglePlay, playNext, playPrevious, canPlayNext, canPlayPrevious]);
 
     // 1. Управление воспроизведением (как было)
     useEffect(() => {
@@ -34,13 +74,19 @@ export default function PlayerBar() {
         } else {
             audioRef.current.pause();
         }
-    }, [isPlaying, activeTrack]);
+        
+        // Обновляем состояние в Media Session API
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+        }
+    }, [isPlaying]);
 
     // 2. Автозапуск (как было) + Сброс времени
     useEffect(() => {
         if (activeTrack && audioRef.current) {
             audioRef.current.volume = volume;
             audioRef.current.currentTime = 0; // Сброс времени
+            isSeeking.current = false; // Сбрасываем флаг при смене трека
             audioRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
         }
     }, [activeTrack]);
@@ -97,6 +143,7 @@ export default function PlayerBar() {
     const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
         const time = Number(e.target.value);
         if (audioRef.current) {
+            isSeeking.current = true;
             audioRef.current.currentTime = time;
             setCurrentTime(time);
         }
@@ -192,6 +239,8 @@ export default function PlayerBar() {
                 onPlay={() => setIsPlaying(true)}
                 onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleTimeUpdate}
+                onSeeking={() => { isSeeking.current = true; }}
+                onSeeked={() => { isSeeking.current = false; }}
             />
 
             {/* --- ПРОГРЕСС БАР (Сверху) --- */}
@@ -310,7 +359,7 @@ export default function PlayerBar() {
                             value={volume} 
                             onChange={handleVolumeChange}
                             className={styles.rangeInput}
-                            style={{ backgroundSize: `${volume * 100}% 100%` }}
+                            style={{ "--value": `${volume * 100}%` } as React.CSSProperties}
                         />
                     </div>
                     <button className={styles.iconButton} onClick={toggleMute}>

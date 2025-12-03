@@ -17,10 +17,8 @@ const navigation = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  // Достаем состояние из хранилища
   const { user, isAuthenticated, checkAuth } = useAuthStore();
 
-  // При первой загрузке проверяем, есть ли токен
   useEffect(() => {
     checkAuth();
   }, []);
@@ -49,7 +47,6 @@ export default function Sidebar() {
 
       <div className={styles.profile}>
         {isAuthenticated ? (
-            // Если вошли - ссылка на аккаунт
             <Link href="/account" className={styles.link}>
                 <div style={{ background: "#333", borderRadius: "50%", padding: 5 }}>
                     <User size={20} />

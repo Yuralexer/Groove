@@ -24,8 +24,9 @@ export default function RootLayout({
           {/* Контент (занимает всё оставшееся место) */}
           <main style={{ 
             flex: 1, 
-            overflowY: "auto", 
-            paddingBottom: "var(--player-height)", // Отступ снизу под плеер
+            overflowY: "auto",
+            overflowX: "hidden",
+            paddingBottom: "var(--player-height)",
             position: "relative"
           }}>
             {children}

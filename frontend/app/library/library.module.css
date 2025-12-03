@@ -100,15 +100,16 @@
 }
 
 .card {
-    background: #181818;
+    background: #19191A;
     padding: 16px;
-    border-radius: 8px;
-    transition: 0.3s;
+    border: solid 2px #262528;
+    border-radius: 10px;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
     cursor: pointer;
 }
 
 .card:hover {
-    background: #282828;
+    background: #262528;
 }
 
 .imagePlaceholder {

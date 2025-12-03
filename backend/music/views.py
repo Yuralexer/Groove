@@ -1,6 +1,7 @@
 import random
 import mimetypes
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponse
+import os
 
 from django.db.models import Q, F
 from rest_framework.views import APIView
@@ -168,11 +169,12 @@ class RecommendationAPIView(APIView):
 
 
 class TrackStreamView(APIView):
-    """Stream a track file and increment its plays_count."""
+    """Stream a track file and increment its plays_count. Supports HTTP Range requests for seeking."""
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, pk):
         track = get_object_or_404(Track, pk=pk)
+        
         # Increment plays_count atomically but avoid double-counting on range requests.
         # Count only when the request has no Range header or starts from byte 0.
         range_header = request.META.get('HTTP_RANGE', '')
@@ -188,10 +190,55 @@ class TrackStreamView(APIView):
             Track.objects.filter(pk=pk).update(plays_count=F('plays_count') + 1)
 
         try:
-            # Open file and stream it
-            track.file.open('rb')
+            # Get file path and size
+            file_path = track.file.path
+            file_size = os.path.getsize(file_path)
+            
+            # Get MIME type
             mime, _ = mimetypes.guess_type(track.file.name)
             content_type = mime or 'application/octet-stream'
-            return FileResponse(track.file, content_type=content_type)
-        except Exception:
+            
+            # Handle Range requests
+            range_header = request.META.get('HTTP_RANGE', '')
+            
+            if range_header:
+                # Parse range header (e.g., "bytes=0-1023" or "bytes=1024-")
+                try:
+                    range_match = range_header.replace('bytes=', '')
+                    start, end = range_match.split('-')
+                    
+                    start = int(start) if start else 0
+                    end = int(end) if end else file_size - 1
+                    
+                    # Ensure valid range
+                    if start < 0 or end >= file_size or start > end:
+                        return HttpResponse(status=416)  # Range Not Satisfiable
+                    
+                    # Open file and create response
+                    with open(file_path, 'rb') as f:
+                        f.seek(start)
+                        content = f.read(end - start + 1)
+                    
+                    response = HttpResponse(content, status=206, content_type=content_type)
+                    response['Content-Range'] = f'bytes {start}-{end}/{file_size}'
+                    response['Content-Length'] = len(content)
+                    response['Accept-Ranges'] = 'bytes'
+                    response['Content-Disposition'] = 'inline'
+                    return response
+                    
+                except (ValueError, IndexError):
+                    # Invalid range format, serve full file
+                    pass
+            
+            # Serve full file if no range request
+            with open(file_path, 'rb') as f:
+                response = HttpResponse(f.read(), content_type=content_type)
+            
+            response['Accept-Ranges'] = 'bytes'
+            response['Content-Length'] = file_size
+            response['Content-Disposition'] = 'inline'
+            return response
+            
+        except Exception as e:
+            print(f"Error streaming track {pk}: {e}")
             raise Http404
