@@ -5,21 +5,45 @@
 }
 
 .header {
+    position: relative;
+    min-height: 400px;
+    background-size: cover;
+    background-position: center;
+    background-color: #19181B;
     display: flex;
-    align-items: center; /* По центру вертикально */
+    align-items: flex-end;
+    padding: 40px 32px;
+}
+
+.headerOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(25,24,27,0.95));
+    pointer-events: none;
+}
+
+.headerContent {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
     gap: 32px;
-    padding: 80px 32px 40px 32px;
+    width: 100%;
+}
+
+.avatarSection {
+    flex-shrink: 0;
 }
 
 .artistImage {
     width: 200px;
     height: 200px;
-    border-radius: 50%; /* Круг */
+    border-radius: 50%;
     background-size: cover;
     background-position: center;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
     background-color: #333;
-    flex-shrink: 0;
+    border: 4px solid rgba(255,255,255,0.1);
 }
 
 .info {
@@ -39,8 +63,26 @@
 .name {
     font-size: 5rem;
     font-weight: 900;
-    margin: 0;
+    margin: 0 0 12px 0;
     line-height: 1;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #7b61ff1a;
+    color: #7b61ff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid #7b61ff70;
 }
 
 .stats {
@@ -65,28 +107,119 @@
     flex-direction: column;
 }
 
-.trackRow {
+/* TOP-6 Сетка */
+.topTracksGrid {
     display: grid;
-    grid-template-columns: 40px 1fr 100px; /* Индекс - Инфо - Время */
-    align-items: center;
-    padding: 10px 16px;
-    border-radius: 4px;
-    cursor: pointer;
+    gap: 16px;
+    grid-template-columns: 1fr; 
 }
-.trackRow:hover { background-color: rgba(255,255,255,0.1); }
 
-.trackNum { color: #b3b3b3; text-align: center; }
-.trackTitle { font-size: 16px; color: white; }
-.trackPlays { font-size: 14px; color: #b3b3b3; }
-.activeText { color: var(--accent-color); }
+@media (min-width: 700px) {
+    .topTracksGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    .topTracksGrid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.topTrackCard {
+    position: relative;
+    background: #19191A;
+    border: solid 2px #262528;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    height: 100px;
+}
+
+.topTrackCard:hover {
+    background: #262528;
+    border-color: #7b61ff;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px #7b61ff3d;
+}
+
+.topTrackCard.activeCard {
+    border-color: #7b61ff;
+    background: rgba(61, 145, 244, 0.05);
+}
+
+.trackNumber {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 36px;
+    height: 36px;
+    background-color: #7b61ff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 6px;
+    z-index: 10;
+}
+
+.topTrackImage {
+    height: 100%;
+    aspect-ratio: 1/1;
+    background-color: #2a2a2a;
+    background-size: cover;
+    background-position: center;
+}
+
+.topTrackInfo {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.topTrackTitle {
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.topTrackTitle.activeText {
+    color: #7b61ff;
+}
+
+.topTrackArtist {
+    font-size: 13px;
+    color: #b3b3b3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.topTrackDuration {
+    font-size: 12px;
+    color: #808080;
+}
 
 /* Сетка альбомов */
 .albumGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 24px;
+    background-color: #19181B;
+    border-radius: 20px;
+    padding: 20px;
 }
-/* ... стили карточки альбома можно переиспользовать или скопировать из search.module.css ... */
+
 .albumCard {
     background: #19191A;
     padding: 16px;

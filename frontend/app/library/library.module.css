@@ -97,6 +97,9 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 24px;
+    background-color: #19181B;
+    border-radius: 20px;
+    padding: 20px;
 }
 
 .card {
@@ -147,4 +150,22 @@
 .cardOwner {
     font-size: 14px;
     color: #b3b3b3;
+}
+
+.inputField {
+    height: 40px;
+    width: 100%;
+    background-color: #171619;
+    border: solid 2px #262528;
+    border-radius: 10px;
+    color: white;
+    padding-left: 10px;
+    font-size: 14px;
+    transition: all 0.2s ease-in-out;
+}
+
+.inputField:focus {
+    background-color: #262528;
+    border: solid 2px #262528;
+    transition: all 0.2s ease-in-out;
 }

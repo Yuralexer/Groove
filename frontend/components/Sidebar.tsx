@@ -6,9 +6,10 @@ import { Home, Search, Library, Heart, User, LogIn } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore"; // <--- Импорт
 import { useEffect } from "react";
 import styles from "./Sidebar.module.css";
+import Image from "next/image";
+import imgSrc from '../public/Logo.png'
 
 const navigation = [
-  // ... (массив навигации оставляем как был)
   { name: "Главная", href: "/", icon: Home },
   { name: "Поиск", href: "/search", icon: Search },
   { name: "Библиотека", href: "/library", icon: Library },
@@ -26,7 +27,13 @@ export default function Sidebar() {
   return (
     <div className={styles.sidebar}>
       <div className={styles.logo}>
-        <span>Groove</span>
+        <Link href="/">
+        <Image
+          src={imgSrc}
+          alt="Groove Logo"
+          height={64}
+        />
+        </Link>
       </div>
 
       <nav className={styles.nav}>

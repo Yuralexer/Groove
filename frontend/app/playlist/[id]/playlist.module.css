@@ -129,8 +129,12 @@
     font-weight: 600;
 }
 
-/* Список треков (стандартный) */
-.trackList { padding: 24px 32px; background: rgba(0,0,0,0.1); }
+.trackList { 
+    padding: 32px; 
+    background: #19181B;
+    border-radius: 20px;
+    margin: 24px 32px;
+}
 .trackRow { display: grid; grid-template-columns: 40px 50px 1fr 60px; align-items: center; padding: 8px 16px; border-radius: 4px; cursor: pointer; gap: 16px; }
 .trackRow:hover { background-color: rgba(255,255,255,0.1); }
 .trackNum { text-align: center; color: #ddd; }
@@ -138,4 +142,3 @@
 .trackTitle { font-size: 16px; color: white; font-weight: 500; }
 .trackArtist { font-size: 14px; color: #ccc; }
 .activeText { color: var(--accent-color); }
-.trackTime { text-align: right; color: #b3b3b3; font-variant-numeric: tabular-nums; }

@@ -10,12 +10,14 @@ export interface Track {
     artist?: string;
     artist_id?: number;
     artist_image?: string;
+    album?: Album;
+    artists: Array<{ id: number; name: string; image?: string }>;
 }
 
 export interface Album {
     id: number;
     title: string;
-    artist: any; // Detail endpoint returns nested artist { id, name, image }
+    artist: any;
     cover: string;
     release_date: string;
 }
@@ -24,8 +26,10 @@ export interface Artist {
     id: number;
     name: string;
     image: string;
+    header_image?: string;
     description?: string;
     albums?: Album[]; 
+    tags?: Array<{ id: number; name: string }>;
 }
 
 export const getImageUrl = (path: string | null) => {
@@ -33,14 +37,6 @@ export const getImageUrl = (path: string | null) => {
     if (path.startsWith('http')) return path;
     return `http://localhost:8000${path}`;
 };
-
-export interface Artist {
-    id: number;
-    name: string;
-    image: string;
-    description?: string;
-    albums?: Album[]; 
-}
 
 export const musicApi = {
     getAllAlbums: async () => {

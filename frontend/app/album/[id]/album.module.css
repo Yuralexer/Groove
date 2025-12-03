@@ -59,8 +59,10 @@
 
 /* Список треков */
 .trackList {
-    padding: 24px 32px;
-    background: rgba(0,0,0,0.2); /* Затемнение списка */
+    padding: 32px;
+    background: #19181B;
+    border-radius: 20px;
+    margin: 24px 32px;
 }
 
 .trackRow {

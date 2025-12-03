@@ -6,14 +6,20 @@
 
 /* Поисковая строка */
 .searchBarWrapper {
-    background-color: white;
-    border-radius: 50px;
-    padding: 12px 20px;
+    background-color: #32313500;
+    border-radius: 12px;
+    padding: 16px 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    max-width: 500px;
+    gap: 12px;
+    max-width: 100%;
     margin-bottom: 40px;
+    border: 2px solid #323135;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.searchBarWrapper:focus-within {
+    background-color: #323135;
 }
 
 .searchInput {
@@ -21,8 +27,13 @@
     outline: none;
     font-size: 16px;
     width: 100%;
-    font-weight: 500;
-    color: #121212; /* Черный текст на белом фоне */
+    font-weight: 400;
+    color: #ffffff;
+    background-color: transparent;
+}
+
+.searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .placeholder {
@@ -48,6 +59,9 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 24px;
+    background-color: #19181B;
+    border-radius: 20px;
+    padding: 20px;
 }
 
 .artistCard {
@@ -93,6 +107,9 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 24px;
+    background-color: #19181B;
+    border-radius: 20px;
+    padding: 20px;
 }
 
 .albumCard {

@@ -88,12 +88,12 @@ export default function CreatePlaylistMenu({ onCreated }: { onCreated?: () => vo
                 <div className={styles.createPanel} role="dialog">
                     <div className={styles.field}>
                         <label>Название</label>
-                        <input value={title} onChange={(e) => setTitle(e.target.value)} />
+                        <input value={title} onChange={(e) => setTitle(e.target.value)} className={styles.inputField} />
                     </div>
 
                     <div className={styles.field}>
                         <label>Обложка (квадратная)</label>
-                        <input type="file" accept="image/*" onChange={onFileChange} />
+                        <input type="file" accept="image/*" onChange={onFileChange} className={styles.fileField} />
                         {preview && <img src={preview} alt="preview" className={styles.preview} />}
                     </div>
 

@@ -28,7 +28,12 @@
 .meta { font-size: 14px; font-weight: 600; }
 
 /* Треки (такие же как везде) */
-.trackList { padding: 24px 32px; background: rgba(0,0,0,0.1); }
+.trackList { 
+    padding: 32px; 
+    background: #19181B;
+    border-radius: 20px;
+    margin: 24px 32px;
+}
 .trackRow { display: grid; grid-template-columns: 40px 50px 1fr 60px; align-items: center; padding: 8px 16px; border-radius: 4px; cursor: pointer; gap: 16px; }
 .trackRow:hover { background-color: rgba(255,255,255,0.1); }
 .trackNum { text-align: center; color: #ddd; }

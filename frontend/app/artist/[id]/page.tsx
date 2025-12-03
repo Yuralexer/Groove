@@ -21,15 +21,13 @@ export default function ArtistPage() {
         const loadData = async () => {
             try {
                 const artistId = Number(params.id);
-                // Загружаем параллельно инфо и топ треки
                 const [artistData, tracksData] = await Promise.all([
                     musicApi.getArtistDetails(artistId),
                     musicApi.getArtistTracks(artistId)
                 ]);
                 
                 setArtist(artistData);
-                // Берем только первые 5 популярных треков
-                setTopTracks(tracksData.slice(0, 5));
+                setTopTracks(tracksData.slice(0, 6));
             } catch (e) {
                 console.error(e);
             } finally {
@@ -42,48 +40,77 @@ export default function ArtistPage() {
     if (loading) return <div className="p-8">Загрузка...</div>;
     if (!artist) return <div className="p-8">Артист не найден</div>;
 
+    const headerBg = artist.header_image ? getImageUrl(artist.header_image) : null;
+
     return (
         <div className={styles.container}>
-            {/* Шапка */}
-            <div className={styles.header}>
-                <div 
-                    className={styles.artistImage}
-                    style={{ backgroundImage: `url(${getImageUrl(artist.image)})` }}
-                />
-                <div className={styles.info}>
-                    <div className={styles.verified}>
-                        <BadgeCheck fill="#3d91f4" color="white" size={24} />
-                        Подтвержденный исполнитель
+            {/* Шапка с фоном */}
+            <div 
+                className={styles.header}
+                style={headerBg ? { backgroundImage: `url(${headerBg})` } : {}}
+            >
+                {headerBg && <div className={styles.headerOverlay}></div>}
+                <div className={styles.headerContent}>
+                    <div className={styles.avatarSection}>
+                        <div 
+                            className={styles.artistImage}
+                            style={{ backgroundImage: `url(${getImageUrl(artist.image)})` }}
+                        />
                     </div>
-                    <h1 className={styles.name}>{artist.name}</h1>
+                    <div className={styles.info}>
+                        <div className={styles.verified}>
+                            <BadgeCheck fill="#3d91f4" color="white" size={24} />
+                            Подтвережденный исполнитель
+                        </div>
+                        <h1 className={styles.name}>{artist.name}</h1>
+                        {artist.tags && artist.tags.length > 0 && (
+                            <div className={styles.tags}>
+                                {artist.tags.map(tag => (
+                                    <span key={tag.id} className={styles.tag}>
+                                        {tag.name}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {/* Популярные треки */}
+            {/* ТОП-6 треков */}
             <section className={styles.section}>
-                <h2 className={styles.sectionTitle}>Популярные треки</h2>
-                <div className={styles.trackList}>
+                <h2 className={styles.sectionTitle}>ТОП-6 треков исполнителя</h2>
+                <div className={styles.topTracksGrid}>
                     {topTracks.map((track, index) => {
                         const isCurrent = activeTrack?.id === track.id;
                         return (
                             <div 
                                 key={track.id} 
-                                className={styles.trackRow}
+                                className={`${styles.topTrackCard} ${isCurrent ? styles.activeCard : ''}`}
                                 onClick={() => playTrack(track, topTracks, 'playlist')}
                             >
-                                <div className={styles.trackNum}>
-                                    {isCurrent ? "▶" : index + 1}
+                                <div className={styles.trackNumber}>{index + 1}</div>
+                                <div className={styles.topTrackImage}>
+                                    {track.album?.cover && (
+                                        <div 
+                                            style={{ 
+                                                backgroundImage: `url(${getImageUrl(track.album.cover)})`,
+                                                width: '100%',
+                                                height: '100%',
+                                                backgroundSize: 'cover',
+                                                backgroundPosition: 'center'
+                                            }}
+                                        />
+                                    )}
                                 </div>
-                                <div className={styles.info}>
-                                    <div className={`${styles.trackTitle} ${isCurrent ? styles.activeText : ''}`}>
-                                        {track.title}
+                                <div className={styles.topTrackInfo}>
+                                    <div className="marqueeWrapper">
+                                        <div className={`marqueeContent ${styles.topTrackTitle} ${isCurrent ? styles.activeText : ''}`}>
+                                            {track.title}
+                                        </div>
                                     </div>
-                                    <div className={styles.trackPlays}>
-                                        {track.plays_count.toLocaleString()} прослушиваний
+                                    <div className={styles.topTrackDuration}>
+                                        {formatTime(track.duration)} •  {track.plays_count} прослушиваний
                                     </div>
-                                </div>
-                                <div style={{ textAlign: 'right', color: '#b3b3b3' }}>
-                                    {formatTime(track.duration)}
                                 </div>
                             </div>
                         );

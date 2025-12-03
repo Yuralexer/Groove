@@ -74,18 +74,34 @@ export default function PlaylistPage() {
             {/* Треки */}
             <div className={styles.trackList}>
                 {playlist.tracks.map((track, index) => {
+                    const isCurrent = activeTrack?.id === track.id;
                     return (
-                        <div key={track.id}>
-                            <TrackRow track={track} queue={playlist.tracks} context="playlist" />
+                        <div 
+                            key={track.id} 
+                            className={styles.trackRow}
+                            onClick={() => playTrack(track, playlist.tracks, 'playlist')}
+                        >
+                            <div className={styles.trackNum}>{isCurrent ? "▶" : index + 1}</div>
+                            
+                            <div 
+                                className={styles.trackImage}
+                                style={{ backgroundImage: track.cover ? `url(${getImageUrl(track.cover)})` : undefined }}
+                            >
+                                {!track.cover && "♫"}
+                            </div>
+
+                            <div className={styles.trackInfo}>
+                                <div className={`${styles.trackTitle} ${isCurrent ? styles.activeText : ''}`}>
+                                    {track.title}
+                                </div>
+                                <div className={styles.trackArtist}>
+                                    {track.artist || "Неизвестен"}
+                                </div>
+                            </div>
+                            <div className={styles.trackTime}>{formatTime(track.duration)}</div>
                         </div>
                     );
                 })}
-                
-                {playlist.tracks.length === 0 && (
-                    <div style={{ padding: 20, color: '#aaa' }}>
-                        В этом плейлисте пока нет треков.
-                    </div>
-                )}
             </div>
         </div>
     );

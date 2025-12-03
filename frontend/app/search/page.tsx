@@ -54,7 +54,7 @@ export default function SearchPage() {
         <div className={styles.container}>
             {/* Поле ввода */}
             <div className={styles.searchBarWrapper}>
-                <SearchIcon color="#333" size={24} />
+                <SearchIcon color="#ffffff" size={24} />
                 <input 
                     type="text" 
                     className={styles.searchInput}

@@ -11,6 +11,7 @@ class Tag(models.Model):
 class Artist(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='artist_images/', blank=True, null=True)
+    header_image = models.ImageField(upload_to='artist_headers/', blank=True, null=True)
     description = models.TextField(blank=True)
     
     tags = models.ManyToManyField(Tag, related_name='artists', blank=True)

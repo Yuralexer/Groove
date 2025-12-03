@@ -25,6 +25,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Адаптивная сетка */
   gap: 16px;
+  background-color: #19181B;
+  border-radius: 20px;
+  padding: 20px;
 }
 
 /* Сама карточка */
