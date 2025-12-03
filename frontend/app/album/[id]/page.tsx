@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; // Хук для получения ID из URL
 import { musicApi, getImageUrl } from "@/lib/music";
+import Link from "next/link";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { formatTime } from "@/lib/utils";
 import { Play } from "lucide-react"; // Иконка Play для большой кнопки
@@ -55,11 +56,19 @@ export default function AlbumPage() {
         const t = {
             ...track,
             cover: album.cover,
-            artist: album.artist
-        };
+            artist: track.artist || (album.artist && album.artist.name),
+            artist_id: track.artist_id ?? (album.artist && album.artist.id),
+            artist_image: track.artist_image ?? (album.artist && album.artist.image),
+        } as any;
 
         // Build queue with album tracks enriched with cover/artist
-        const queue = album.tracks.map(tr => ({ ...tr, cover: album.cover, artist: album.artist }));
+        const queue = album.tracks.map(tr => ({
+            ...tr,
+            cover: album.cover,
+            artist: tr.artist || (album.artist && album.artist.name),
+            artist_id: tr.artist_id ?? (album.artist && album.artist.id),
+            artist_image: tr.artist_image ?? (album.artist && album.artist.image),
+        }));
         playTrack(t, queue, 'album');
     };
 
@@ -79,11 +88,24 @@ export default function AlbumPage() {
                         </h1>
                     </div>
                     <div className={styles.meta}>
-                        {/* Аватарка артиста (пока заглушка) */}
-                        <div style={{width: 24, height: 24, borderRadius: '50%', background: '#777'}}></div>
-                        <span style={{fontWeight: 'bold'}}>{album.artist}</span>
-                        <span>• {album.release_date?.split('-')[0]}</span>
-                        <span>• {album.tracks.length} треков</span>
+                        {/* Artist avatar + link */}
+                        {album.artist ? (
+                            <>
+                                <Link href={`/artist/${album.artist.id}`} className={styles.artistLink} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                                    <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundImage: `url(${getImageUrl(album.artist.image)})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                                    <span style={{ fontWeight: 'bold' }}>{album.artist.name}</span>
+                                </Link>
+                                <span>• {album.release_date?.split('-')[0]}</span>
+                                <span>• {album.tracks.length} треков</span>
+                            </>
+                        ) : (
+                            <>
+                                <div style={{width: 24, height: 24, borderRadius: '50%', background: '#777'}}></div>
+                                <span style={{fontWeight: 'bold'}}>{album.artist}</span>
+                                <span>• {album.release_date?.split('-')[0]}</span>
+                                <span>• {album.tracks.length} треков</span>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -115,7 +137,7 @@ export default function AlbumPage() {
                                 <div className={`${styles.trackTitle} ${isCurrent ? styles.activeTrack : ''}`}>
                                     {track.title}
                                 </div>
-                                <div className={styles.trackArtist}>{album.artist}</div>
+                                {/* Artist info intentionally omitted on album track rows */}
                             </div>
                             <div className="text-right font-variant-numeric">
                                 {formatTime(track.duration)}

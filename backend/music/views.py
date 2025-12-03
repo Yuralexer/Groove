@@ -1,6 +1,8 @@
 import random
+import mimetypes
+from django.http import FileResponse, Http404
 
-from django.db.models import Q
+from django.db.models import Q, F
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
@@ -127,7 +129,10 @@ class TrackListAPIView(APIView):
         if not artist_id:
             queryset = queryset.order_by('-id').distinct()
 
-        queryset = queryset.order_by('-id').distinct()
+        if not artist_id and not search_query:
+            queryset = queryset.order_by('-id').distinct()
+        else:
+            queryset = queryset.distinct()
         serializer = TrackSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -160,3 +165,33 @@ class RecommendationAPIView(APIView):
         
         serializer = TrackSerializer(recommendations_list, many=True, context={'request': request})
         return Response(serializer.data)
+
+
+class TrackStreamView(APIView):
+    """Stream a track file and increment its plays_count."""
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, pk):
+        track = get_object_or_404(Track, pk=pk)
+        # Increment plays_count atomically but avoid double-counting on range requests.
+        # Count only when the request has no Range header or starts from byte 0.
+        range_header = request.META.get('HTTP_RANGE', '')
+        should_count = False
+        if not range_header:
+            should_count = True
+        else:
+            # Example Range: 'bytes=0-'
+            if range_header.startswith('bytes=0'):
+                should_count = True
+
+        if should_count:
+            Track.objects.filter(pk=pk).update(plays_count=F('plays_count') + 1)
+
+        try:
+            # Open file and stream it
+            track.file.open('rb')
+            mime, _ = mimetypes.guess_type(track.file.name)
+            content_type = mime or 'application/octet-stream'
+            return FileResponse(track.file, content_type=content_type)
+        except Exception:
+            raise Http404

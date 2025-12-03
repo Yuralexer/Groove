@@ -3,12 +3,13 @@
 import { useEffect, useState, useRef } from "react";
 import { Track } from "@/lib/music";
 import { getImageUrl } from "@/lib/music";
+import Link from "next/link";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { playlistApi } from "@/lib/playlists";
 import styles from "./trackrow.module.css";
 import { Heart, MoreVertical, Check } from "lucide-react";
 
-export default function TrackRow({ track, queue, context }: { track: Track; queue?: Track[]; context?: 'album' | 'playlist' | 'search' }) {
+export default function TrackRow({ track, queue, context, showCover = false, showArtistInfo = true }: { track: Track; queue?: Track[]; context?: 'album' | 'playlist' | 'search'; showCover?: boolean; showArtistInfo?: boolean }) {
     const { playTrack, activeTrack } = usePlayerStore();
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -106,13 +107,25 @@ export default function TrackRow({ track, queue, context }: { track: Track; queu
         <div className={styles.row} onClick={() => playTrack(track, queue, context)}>
             <div className={styles.num}>{isCurrent ? '▶' : ''}</div>
 
-            <div className={styles.image} style={{ backgroundImage: track.cover ? `url(${getImageUrl(track.cover)})` : undefined }}>
-                {!track.cover && '♫'}
-            </div>
+            {showCover && (
+                <div className={styles.image} style={{ backgroundImage: track.cover ? `url(${getImageUrl(track.cover)})` : undefined }}>
+                    {!track.cover && '♫'}
+                </div>
+            )}
 
             <div className={styles.info}>
                 <div className={`${styles.title} ${isCurrent ? styles.activeText : ''}`}>{track.title}</div>
-                <div className={styles.artist}>{track.artist || 'Неизвестный'}</div>
+                {showArtistInfo && (
+                    <div className={styles.artist}>
+                        {track.artist_id ? (
+                            <Link href={`/artist/${track.artist_id}`} className={styles.artistLink} onClick={(e) => e.stopPropagation()}>
+                                <span>{track.artist}</span>
+                            </Link>
+                        ) : (
+                            track.artist || 'Неизвестный'
+                        )}
+                    </div>
+                )}
             </div>
 
             <div className={styles.actions} onClick={(e) => e.stopPropagation()}>

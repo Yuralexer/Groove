@@ -6,6 +6,7 @@ import { getImageUrl } from "@/lib/music";
 import { formatTime } from "@/lib/utils";
 import { playlistApi } from "@/lib/playlists";
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Heart, MoreVertical, Check } from "lucide-react";
+import Link from "next/link";
 import styles from "./PlayerBar.module.css";
 
 export default function PlayerBar() {
@@ -185,7 +186,7 @@ export default function PlayerBar() {
         <div className={styles.player}>
             <audio 
                 ref={audioRef} 
-                src={getImageUrl(activeTrack.file)} 
+                src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/music/tracks/${activeTrack.id}/stream/`} 
                 onEnded={handleTrackEnd}
                 onPause={() => setIsPlaying(false)}
                 onPlay={() => setIsPlaying(true)}
@@ -220,7 +221,15 @@ export default function PlayerBar() {
                 />
                 <div>
                     <div style={{ fontWeight: 600 }}>{activeTrack.title}</div>
-                    <div style={{ fontSize: 12, color: '#b3b3b3' }}>{activeTrack.artist || "Неизвестен"}</div>
+                    <div style={{ fontSize: 12, color: '#b3b3b3', display: 'flex', alignItems: 'center', gap: 8 }}>
+                            {activeTrack.artist_id ? (
+                                <Link href={`/artist/${activeTrack.artist_id}`} className={styles.artistLink}>
+                                    {activeTrack.artist}
+                                </Link>
+                            ) : (
+                                activeTrack.artist || 'Неизвестен'
+                            )}
+                    </div>
                 </div>
             </div>
 
@@ -255,44 +264,43 @@ export default function PlayerBar() {
 
             {/* --- ГРОМКОСТЬ --- */}
             <div className={styles.volumeContainer}>
-                <div className={styles.volumeWrapper}>
-                    {/* Like and Menu buttons */}
-                    <div className={styles.trackActions} onClick={(e) => e.stopPropagation()}>
-                        <button className={styles.actionButton} onClick={toggleFavorite} aria-label="Like">
-                            <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} className={isFavorite ? styles.liked : ''} />
+                {/* Like and Menu buttons */}
+                <div className={styles.trackActions} onClick={(e) => e.stopPropagation()}>
+                    <button className={styles.actionButton} onClick={toggleFavorite} aria-label="Like">
+                        <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} className={isFavorite ? styles.liked : ''} />
+                    </button>
+
+                    <div className={styles.menuWrapper} ref={menuRef}>
+                        <button className={styles.actionButton} onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); if (!menuOpen) setSubmenuOpen(false); }} aria-label="More">
+                            <MoreVertical size={18} />
                         </button>
 
-                        <div className={styles.menuWrapper} ref={menuRef}>
-                            <button className={styles.actionButton} onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); if (!menuOpen) setSubmenuOpen(false); }} aria-label="More">
-                                <MoreVertical size={18} />
-                            </button>
-
-                            {menuOpen && (
-                                <div className={styles.menu}>
-                                    <div className={styles.menuItem} onMouseEnter={openPlaylistSubmenu}>
-                                        <div>Добавить в плейлист</div>
-                                        <div className={styles.submenuArrow}>▶</div>
-                                        {submenuOpen && (
-                                            <div className={styles.submenu}>
-                                                {playlists.length === 0 && <div className={styles.menuItem}>Нет плейлистов</div>}
-                                                {playlists.map(p => (
-                                                    <div key={p.id} className={styles.menuItem} onClick={() => toggleTrackInPlaylist(p.id)}>
-                                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                            <div style={{ width: 8 }}>
-                                                                {playlistMembership[p.id] ? <Check size={14} /> : null}
-                                                            </div>
-                                                            <div>{p.title}</div>
+                        {menuOpen && (
+                            <div className={styles.menu}>
+                                <div className={styles.menuItem} onMouseEnter={openPlaylistSubmenu}>
+                                    <div>Добавить в плейлист</div>
+                                    <div className={styles.submenuArrow}>▶</div>
+                                    {submenuOpen && (
+                                        <div className={styles.submenu}>
+                                            {playlists.length === 0 && <div className={styles.menuItem}>Нет плейлистов</div>}
+                                            {playlists.map(p => (
+                                                <div key={p.id} className={styles.menuItem} onClick={() => toggleTrackInPlaylist(p.id)}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                        <div style={{ width: 8 }}>
+                                                            {playlistMembership[p.id] ? <Check size={14} /> : null}
                                                         </div>
+                                                        <div>{p.title}</div>
                                                     </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </div>
-
+                </div>
+                <div className={styles.volumeWrapper}>
                     <div className={styles.volumeSlider}>
                          <input 
                             type="range" 

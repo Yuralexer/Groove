@@ -120,9 +120,8 @@ export default function SearchPage() {
                     {tracks.map(track => {
                         return (
                             <div key={track.id}>
-                                {/* Using reusable TrackRow component */}
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <TrackRow track={track} queue={tracks} context="search" />
+                                {/* Using reusable TrackRow component with cover visible in search */}
+                                <TrackRow track={track} queue={tracks} context="search" showCover={true} />
                             </div>
                         )
                     })}

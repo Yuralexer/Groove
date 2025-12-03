@@ -1,19 +1,5 @@
 import api from './api';
 
-export interface Artist {
-    id: number;
-    name: string;
-    image: string;
-}
-
-export interface Album {
-    id: number;
-    title: string;
-    artist: string;
-    cover: string;
-    release_date: string;
-}
-
 export interface Track {
     id: number;
     title: string;
@@ -22,6 +8,24 @@ export interface Track {
     plays_count: number;
     cover?: string;
     artist?: string;
+    artist_id?: number;
+    artist_image?: string;
+}
+
+export interface Album {
+    id: number;
+    title: string;
+    artist: any; // Detail endpoint returns nested artist { id, name, image }
+    cover: string;
+    release_date: string;
+}
+
+export interface Artist {
+    id: number;
+    name: string;
+    image: string;
+    description?: string;
+    albums?: Album[]; 
 }
 
 export const getImageUrl = (path: string | null) => {

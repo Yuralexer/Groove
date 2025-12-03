@@ -11,9 +11,17 @@ class TagSerializer(serializers.ModelSerializer):
 class TrackSerializer(serializers.ModelSerializer):
     cover = serializers.ImageField(source='album.cover', read_only=True)
     artist = serializers.CharField(source='album.artist.name', read_only=True)
+    artist_id = serializers.IntegerField(source='album.artist.id', read_only=True)
+    artist_image = serializers.ImageField(source='album.artist.image', read_only=True)
     class Meta:
         model = Track
-        fields = ['id', 'title', 'file', 'duration', 'order', 'plays_count', 'cover', 'artist']
+        fields = ['id', 'title', 'file', 'duration', 'order', 'plays_count', 'cover', 'artist', 'artist_id', 'artist_image']
+
+
+class ArtistListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Artist
+        fields = ['id', 'name', 'image']
 
 
 class AlbumListSerializer(serializers.ModelSerializer):
@@ -24,8 +32,17 @@ class AlbumListSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'cover', 'artist', 'release_date']
 
 
+class ArtistDetailSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True, read_only=True)
+    albums = AlbumListSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Artist
+        fields = ['id', 'name', 'image', 'description', 'tags', 'albums']
+
+
 class AlbumDetailSerializer(serializers.ModelSerializer):
-    artist = serializers.StringRelatedField()
+    artist = ArtistListSerializer(read_only=True)
     tags = TagSerializer(many=True, read_only=True)
     tracks = TrackSerializer(many=True, read_only=True) 
 
@@ -38,18 +55,3 @@ class AlbumCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Album
         fields = ['title', 'artist', 'cover', 'release_date', 'description']
-
-
-class ArtistListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Artist
-        fields = ['id', 'name', 'image']
-
-
-class ArtistDetailSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True, read_only=True)
-    albums = AlbumListSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Artist
-        fields = ['id', 'name', 'image', 'description', 'tags', 'albums']
