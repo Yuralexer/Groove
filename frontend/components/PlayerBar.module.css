@@ -122,7 +122,7 @@
     width: 40%;
 }
 
-.buttons {
+.buttonRow {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -151,6 +151,7 @@
     border: none;
     color: #b3b3b3;
     cursor: pointer;
+    transition: color 0.2s ease;
 }
 
 .iconButton:hover {
@@ -164,6 +165,10 @@
 
 .iconButton.disabled:hover {
     color: #555;
+}
+
+.iconButton.active {
+    color: var(--accent-color, #7B61FF);
 }
 
 .progressBarContainer {

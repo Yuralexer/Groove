@@ -5,7 +5,7 @@ import { usePlayerStore } from "@/store/usePlayerStore";
 import { getImageUrl } from "@/lib/music";
 import { formatTime } from "@/lib/utils";
 import { playlistApi } from "@/lib/playlists";
-import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Heart, MoreVertical, Check } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Heart, MoreVertical, Check, Shuffle, Repeat, Repeat1 } from "lucide-react";
 import Link from "next/link";
 import styles from "./PlayerBar.module.css";
 
@@ -55,7 +55,7 @@ const saveVolumeToCookie = (volume: number): void => {
 };
 
 export default function PlayerBar() {
-    const { activeTrack, isPlaying, togglePlay, setIsPlaying, playNext, playPrevious, canPlayNext, canPlayPrevious } = usePlayerStore();
+    const { activeTrack, isPlaying, togglePlay, setIsPlaying, playNext, playPrevious, canPlayNext, canPlayPrevious, loopMode, cycleLoopMode, isShuffleEnabled, toggleShuffle } = usePlayerStore();
     const audioRef = useRef<HTMLAudioElement>(null);
 
     // Локальные состояния для UI
@@ -342,7 +342,17 @@ export default function PlayerBar() {
 
             {/* Кнопки */}
             <div className={styles.controls}>
-                <div className={styles.buttons}>
+                <div className={styles.buttonRow}>
+                    {/* Кнопка рандомизации - слева */}
+                    <button 
+                        className={`${styles.iconButton} ${isShuffleEnabled ? styles.active : ''}`}
+                        onClick={toggleShuffle}
+                        title={isShuffleEnabled ? "Рандомизация включена" : "Рандомизация выключена"}
+                    >
+                        <Shuffle size={20} />
+                    </button>
+
+                    {/* Кнопка предыдущего трека */}
                     <button 
                         className={`${styles.iconButton} ${!canPlayPrevious() ? styles.disabled : ''}`}
                         onClick={() => canPlayPrevious() && playPrevious()}
@@ -351,16 +361,31 @@ export default function PlayerBar() {
                         <SkipBack size={20} />
                     </button>
                     
+                    {/* Кнопка play/pause */}
                     <button className={styles.playButton} onClick={togglePlay}>
                         {isPlaying ? <Pause size={18} fill="black" /> : <Play size={18} fill="black" />}
                     </button>
                     
+                    {/* Кнопка следующего трека */}
                     <button 
                         className={`${styles.iconButton} ${!canPlayNext() ? styles.disabled : ''}`}
                         onClick={() => canPlayNext() && playNext()}
                         disabled={!canPlayNext()}
                     >
                         <SkipForward size={20} />
+                    </button>
+
+                    {/* Кнопка зацикливания - справа */}
+                    <button 
+                        className={`${styles.iconButton} ${loopMode !== 'no-repeat' ? styles.active : ''}`}
+                        onClick={cycleLoopMode}
+                        title={
+                            loopMode === 'no-repeat' ? 'Нет зацикливания' :
+                            loopMode === 'repeat-playlist' ? 'Плейлист/Альбом зациклен' :
+                            'Песня зациклена'
+                        }
+                    >
+                        {loopMode === 'repeat-track' ? <Repeat1 size={20} /> : <Repeat size={20} />}
                     </button>
                 </div>
                 {/* Время (текущее / всего) */}
