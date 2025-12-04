@@ -59,7 +59,7 @@ export default function PlaylistPage() {
                     <h1 className={styles.title}>{playlist.title}</h1>
                     <div style={{ marginTop: 12 }}>
                         {!playlist.is_favorite && (
-                            <Link href={`/playlist/${playlist.id}/edit`} className={styles.editButton}>Изменить</Link>
+                            <Link href={`/playlist/${playlist.id}/editor`} className={styles.editButton}>Изменить</Link>
                         )}
                     </div>
                     <div className={styles.meta}>
