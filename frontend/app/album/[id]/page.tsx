@@ -1,20 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation"; // Хук для получения ID из URL
+import { useParams } from "next/navigation";
 import { musicApi, getImageUrl } from "@/lib/music";
 import Link from "next/link";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { formatTime } from "@/lib/utils";
-import { Play } from "lucide-react"; // Иконка Play для большой кнопки
+import { Play } from "lucide-react";
+import Marquee from "@/components/Marquee";
+import TrackRow from "@/components/TrackRow";
 import styles from "./album.module.css";
 
-// Тип, который возвращает бэк (AlbumDetailSerializer)
-// Мы его расширяем прямо тут, или берем из lib/music, если там всё описано
 interface AlbumDetail {
     id: number;
     title: string;
-    artist: string;
+    artist: {
+        id: number;
+        name: string;
+        image: string;
+    };
     cover: string;
     release_date: string;
     tracks: {
@@ -23,6 +27,10 @@ interface AlbumDetail {
         file: string;
         duration: number;
         plays_count: number;
+        cover?: string;
+        artist?: string;
+        artist_id?: number;
+        artist_image?: string;
     }[];
 }
 
@@ -59,6 +67,7 @@ export default function AlbumPage() {
             artist: track.artist || (album.artist && album.artist.name),
             artist_id: track.artist_id ?? (album.artist && album.artist.id),
             artist_image: track.artist_image ?? (album.artist && album.artist.image),
+            artists: [],
         } as any;
 
         // Build queue with album tracks enriched with cover/artist
@@ -68,6 +77,7 @@ export default function AlbumPage() {
             artist: tr.artist || (album.artist && album.artist.name),
             artist_id: tr.artist_id ?? (album.artist && album.artist.id),
             artist_image: tr.artist_image ?? (album.artist && album.artist.image),
+            artists: [],
         }));
         playTrack(t, queue, 'album');
     };
@@ -82,11 +92,11 @@ export default function AlbumPage() {
                 />
                 <div className={styles.info}>
                     <span className={styles.type}>Альбом</span>
-                    <div className="marqueeWrapper" style={{ maxWidth: '70vw' }}>
-                        <h1 className={`marqueeContent ${styles.title}`}>
+                    <Marquee style={{ maxWidth: '70vw' }}>
+                        <h1 className={styles.title}>
                             {album.title}
                         </h1>
-                    </div>
+                    </Marquee>
                     <div className={styles.meta}>
                         {/* Artist avatar + link */}
                         {album.artist ? (
@@ -112,37 +122,32 @@ export default function AlbumPage() {
 
             {/* Список треков */}
             <div className={styles.trackList}>
-                {/* Заголовки таблицы */}
-                <div className={styles.trackRow} style={{ borderBottom: '1px solid #333', marginBottom: 10, fontSize: 12, textTransform: 'uppercase' }}>
-                    <div className="text-center">#</div>
-                    <div>Название</div>
-                    <div className="text-right">Время</div>
-                </div>
-
-                {album.tracks.map((track, index) => {
-                    // Проверяем, играет ли этот трек прямо сейчас
-                    const isCurrent = activeTrack?.id === track.id;
+                {album.tracks.map((track) => {
+                    // Обогащаем трек данными альбома
+                    const enrichedTrack = {
+                        ...track,
+                        cover: album.cover,
+                        artist: track.artist || (album.artist && album.artist.name),
+                        artist_id: track.artist_id ?? (album.artist && album.artist.id),
+                        artist_image: track.artist_image ?? (album.artist && album.artist.image),
+                        artists: [],
+                    } as any;
 
                     return (
-                        <div 
+                        <TrackRow 
                             key={track.id} 
-                            className={styles.trackRow}
-                            onClick={() => handlePlay(track)}
-                        >
-                            <div className={`${styles.trackNum} ${isCurrent ? styles.activeTrack : ''}`}>
-                                {/* Если трек играет - показываем иконку эквалайзера (или просто Play), иначе номер */}
-                                {isCurrent ? "▶" : index + 1}
-                            </div>
-                            <div>
-                                <div className={`${styles.trackTitle} ${isCurrent ? styles.activeTrack : ''}`}>
-                                    {track.title}
-                                </div>
-                                {/* Artist info intentionally omitted on album track rows */}
-                            </div>
-                            <div className="text-right font-variant-numeric">
-                                {formatTime(track.duration)}
-                            </div>
-                        </div>
+                            track={enrichedTrack} 
+                            queue={album.tracks.map(tr => ({
+                                ...tr,
+                                cover: album.cover,
+                                artist: tr.artist || (album.artist && album.artist.name),
+                                artist_id: tr.artist_id ?? (album.artist && album.artist.id),
+                                artist_image: tr.artist_image ?? (album.artist && album.artist.image),
+                                artists: [],
+                            })) as any}
+                            context="album" 
+                            showCover={false}
+                        />
                     );
                 })}
             </div>

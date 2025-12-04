@@ -9,6 +9,51 @@ import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Heart, MoreVertic
 import Link from "next/link";
 import styles from "./PlayerBar.module.css";
 
+// Константы для громкости
+const VOLUME_MIN = 0;
+const VOLUME_MAX = 1;
+const VOLUME_DEFAULT = 1;
+const VOLUME_COOKIE_NAME = 'groove_volume';
+
+const loadVolumeFromCookie = (): number => {
+    if (typeof window === 'undefined') return VOLUME_DEFAULT;
+    
+    const cookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith(`${VOLUME_COOKIE_NAME}=`));
+    
+    if (!cookie) return VOLUME_DEFAULT;
+    
+    try {
+        const volumeStr = cookie.split('=')[1];
+        const volume = parseFloat(volumeStr);
+        
+        // Валидация: если значение вне границ, используем границу
+        if (isNaN(volume)) return VOLUME_DEFAULT;
+        if (volume < VOLUME_MIN) return VOLUME_MIN;
+        if (volume > VOLUME_MAX) return VOLUME_MAX;
+        
+        return volume;
+    } catch {
+        return VOLUME_DEFAULT;
+    }
+};
+
+// Функция для сохранения громкости в куки
+const saveVolumeToCookie = (volume: number): void => {
+    if (typeof window === 'undefined') return;
+    
+    // Валидируем перед сохранением
+    let validVolume = volume;
+    if (validVolume < VOLUME_MIN) validVolume = VOLUME_MIN;
+    if (validVolume > VOLUME_MAX) validVolume = VOLUME_MAX;
+    
+    // Устанавливаем куку на год
+    const expiryDate = new Date();
+    expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+    document.cookie = `${VOLUME_COOKIE_NAME}=${validVolume}; expires=${expiryDate.toUTCString()}; path=/`;
+};
+
 export default function PlayerBar() {
     const { activeTrack, isPlaying, togglePlay, setIsPlaying, playNext, playPrevious, canPlayNext, canPlayPrevious } = usePlayerStore();
     const audioRef = useRef<HTMLAudioElement>(null);
@@ -16,7 +61,7 @@ export default function PlayerBar() {
     // Локальные состояния для UI
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [volume, setVolume] = useState(1);
+    const [volume, setVolume] = useState(VOLUME_DEFAULT);
     const [isMuted, setIsMuted] = useState(false);
     const [prevVolume, setPrevVolume] = useState(0.5); // Чтобы вернуть громкость после Unmute
     const [isFavorite, setIsFavorite] = useState(false);
@@ -26,6 +71,15 @@ export default function PlayerBar() {
     const [playlistMembership, setPlaylistMembership] = useState<Record<number, boolean>>({});
     const menuRef = useRef<HTMLDivElement | null>(null);
     const isSeeking = useRef(false); // Флаг для отслеживания перемотки
+
+    // Инициализация громкости из куки при загрузке компонента
+    useEffect(() => {
+        const savedVolume = loadVolumeFromCookie();
+        setVolume(savedVolume);
+        if (audioRef.current) {
+            audioRef.current.volume = savedVolume;
+        }
+    }, []);
 
     // Инициализация Media Session API для управления с наушников
     useEffect(() => {
@@ -37,7 +91,7 @@ export default function PlayerBar() {
         media.metadata = new MediaMetadata({
             title: activeTrack.title,
             artist: activeTrack.artist || 'Неизвестен',
-            album: activeTrack.album || '',
+            album: typeof activeTrack.album === 'string' ? activeTrack.album : (typeof activeTrack.album === 'object' && activeTrack.album?.title ? activeTrack.album.title : ''),
             artwork: activeTrack.cover ? [
                 { src: getImageUrl(activeTrack.cover), sizes: '96x96', type: 'image/jpeg' }
             ] : []
@@ -155,6 +209,8 @@ export default function PlayerBar() {
         setVolume(newVol);
         setIsMuted(newVol === 0);
         if (audioRef.current) audioRef.current.volume = newVol;
+        // Сохраняем громкость в куки
+        saveVolumeToCookie(newVol);
     };
 
     const toggleMute = () => {
@@ -164,12 +220,14 @@ export default function PlayerBar() {
                 setVolume(prevVolume);
                 audioRef.current.volume = prevVolume;
                 setIsMuted(false);
+                saveVolumeToCookie(prevVolume);
             } else {
                 // Выключаем
                 setPrevVolume(volume);
                 setVolume(0);
                 audioRef.current.volume = 0;
                 setIsMuted(true);
+                saveVolumeToCookie(0);
             }
         }
     };
@@ -294,7 +352,7 @@ export default function PlayerBar() {
                     </button>
                     
                     <button className={styles.playButton} onClick={togglePlay}>
-                        {isPlaying ? <Pause size={18} fill="black" /> : <Play size={18} fill="black" ml={2} />}
+                        {isPlaying ? <Pause size={18} fill="black" /> : <Play size={18} fill="black" />}
                     </button>
                     
                     <button 

@@ -8,6 +8,7 @@ import { usePlayerStore } from "@/store/usePlayerStore";
 import { playlistApi } from "@/lib/playlists";
 import styles from "./trackrow.module.css";
 import { Heart, MoreVertical, Check } from "lucide-react";
+import Marquee from "@/components/Marquee"
 
 export default function TrackRow({ track, queue, context, showCover = false, showArtistInfo = true }: { track: Track; queue?: Track[]; context?: 'album' | 'playlist' | 'search'; showCover?: boolean; showArtistInfo?: boolean }) {
     const { playTrack, activeTrack } = usePlayerStore();
@@ -114,7 +115,11 @@ export default function TrackRow({ track, queue, context, showCover = false, sho
             )}
 
             <div className={styles.info}>
-                <div className={`${styles.title} ${isCurrent ? styles.activeText : ''}`}>{track.title}</div>
+                <div className={`${styles.title} ${isCurrent ? styles.activeText : ''}`}>
+                    <Marquee>
+                        {track.title}
+                    </Marquee>
+                </div>
                 {showArtistInfo && (
                     <div className={styles.artist}>
                         {track.artist_id ? (

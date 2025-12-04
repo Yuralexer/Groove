@@ -11,6 +11,7 @@ interface AuthState {
     isAuthenticated: boolean;
     authChecked: boolean;
     login: (email: string, password: string) => Promise<void>;
+    register: (username: string, email: string, password: string) => Promise<void>;
     logout: () => void;
     checkAuth: () => Promise<void>;
 }
@@ -32,6 +33,22 @@ export const useAuthStore = create<AuthState>((set) => ({
             set({ user, isAuthenticated: true, authChecked: true });
         } catch (error) {
             console.error("Login failed", error);
+            throw error;
+        }
+    },
+
+    register: async (username, email, password) => {
+        try {
+            const response = await api.post('/auth/register/', { username, email, password });
+            const tokens = response.data.tokens;
+            const user = response.data.user || response.data;
+
+            localStorage.setItem('access_token', tokens.access);
+            localStorage.setItem('refresh_token', tokens.refresh);
+
+            set({ user, isAuthenticated: true, authChecked: true });
+        } catch (error) {
+            console.error("Registration failed", error);
             throw error;
         }
     },

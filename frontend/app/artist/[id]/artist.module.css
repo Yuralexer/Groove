@@ -210,6 +210,82 @@
     color: #808080;
 }
 
+.topTrackActions {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.topTrackCard:hover .topTrackActions {
+    opacity: 1;
+}
+
+.actionButton {
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.actionButton:hover {
+    color: #fff;
+}
+
+.menuWrapper {
+    position: relative;
+}
+
+.menu {
+    position: absolute;
+    background: #282828;
+    border: 1px solid #3d3d3d;
+    border-radius: 8px;
+    min-width: 200px;
+    z-index: 100;
+    right: 0;
+    top: 100%;
+    margin-top: 4px;
+}
+
+.menuItem {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menuItem:hover {
+    background-color: #3d3d3d;
+}
+
+.submenuArrow {
+    font-size: 10px;
+    color: #808080;
+}
+
+.submenu {
+    position: absolute;
+    background: #282828;
+    border: 1px solid #3d3d3d;
+    border-radius: 8px;
+    min-width: 180px;
+    z-index: 101;
+    left: 100%;
+    top: 0;
+    margin-left: 4px;
+}
+
 /* Сетка альбомов */
 .albumGrid {
     display: grid;

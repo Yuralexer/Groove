@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation"; // Для получения ID из URL
+import { useParams } from "next/navigation";
 import { playlistApi, PlaylistDetail } from "@/lib/playlists";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { getImageUrl } from "@/lib/music";
 import { formatTime } from "@/lib/utils";
-import { Music } from "lucide-react"; // Иконка ноты для заглушки
+import { Music } from "lucide-react";
 import styles from "./playlist.module.css";
 import Link from "next/link";
 import TrackRow from "@/components/TrackRow";
@@ -21,7 +21,6 @@ export default function PlaylistPage() {
     useEffect(() => {
         const loadPlaylist = async () => {
             try {
-                // Берем ID из URL
                 const details = await playlistApi.getPlaylist(Number(params.id));
                 setPlaylist(details);
             } catch (e) {
@@ -59,7 +58,7 @@ export default function PlaylistPage() {
                     <h1 className={styles.title}>{playlist.title}</h1>
                     <div style={{ marginTop: 12 }}>
                         {!playlist.is_favorite && (
-                            <Link href={`/playlist/${playlist.id}/editor`} className={styles.editButton}>Изменить</Link>
+                            <Link href={`/playlist/edit/${playlist.id}`} className={styles.editButton}>Изменить</Link>
                         )}
                     </div>
                     <div className={styles.meta}>

@@ -6,6 +6,7 @@ import { musicApi, Album, getImageUrl } from "@/lib/music";
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
 import { usePlayerStore } from "@/store/usePlayerStore";
+import Marquee from "@/components/Marquee";
 
 export default function Home() {
   const { user } = useAuthStore(); // Берем имя юзера
@@ -56,11 +57,9 @@ export default function Home() {
                   {/* Текстовая часть */}
                   <div className={styles.cardContent}>
                       {/* Название с прокруткой */}
-                      <div className="marqueeWrapper">
-                          <div className={`marqueeContent ${styles.cardTitle}`}>
-                              {album.title}
-                          </div>
-                      </div>
+                      <Marquee className={styles.cardTitle}>
+                          {album.title}
+                      </Marquee>
                       
                       {/* Артист */}
                       <div style={{ fontSize: 14, color: '#b3b3b3', marginTop: 4 }}>

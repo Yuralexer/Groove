@@ -32,22 +32,4 @@ a {
   color: inherit;
 }
 
-@keyframes scrollText {
-  0% { transform: translateX(0); }
-  20% { transform: translateX(0); } /* Пауза в начале */
-  100% { transform: translateX(-100%); }
-}
-
-.marqueeWrapper {
-  overflow: hidden;
-  white-space: nowrap;
-  position: relative;
-  mask-image: linear-gradient(to right, black 0%, black 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, black 0%, black 85%, transparent 100%);
-}
-
-.marqueeWrapper:hover .marqueeContent {
-  display: inline-block;
-  animation: scrollText 8s linear infinite;
-  padding-right: 50px; /* Отступ, чтобы текст не слипался при повторе */
-}
+/* Marquee styles moved to Marquee.module.css component */

@@ -1,4 +1,4 @@
-.row{display:grid;grid-template-columns:40px 50px 1fr 120px;align-items:center;padding:8px 12px;border-radius:6px;gap:12px;cursor:pointer}
+.row{display:grid;grid-template-columns:40px 1fr 1fr 120px;align-items:center;padding:8px 12px;border-radius:6px;gap:12px;cursor:pointer}
 .row:hover{background:rgba(255,255,255,0.03)}
 .num{color:#ddd;text-align:center}
 .image{width:48px;height:48px;background:#2b2b2b;border-radius:6px;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#aaa}

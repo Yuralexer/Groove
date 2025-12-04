@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation"; // Для переадресации
+import Link from "next/link";
 import styles from "./login.module.css";
 
 export default function LoginPage() {
@@ -55,6 +56,11 @@ export default function LoginPage() {
                 </div>
 
                 <button type="submit" className={styles.button}>Войти</button>
+
+                <div className={styles.footer}>
+                    <span>Нет аккаунта? </span>
+                    <Link href="/register" className={styles.link}>Зарегистрироваться</Link>
+                </div>
             </form>
         </div>
     );
