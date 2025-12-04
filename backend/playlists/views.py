@@ -38,6 +38,14 @@ class PlaylistDetailAPIView(APIView):
         playlist = self.get_object(pk, request.user)
         serializer = PlaylistDetailSerializer(playlist, context={'request': request})
         return Response(serializer.data)
+    
+    def post(self, request):
+        """Создать новый плейлист (title, cover, description)."""
+        serializer = PlaylistListSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk):
         """Полное обновление плейлиста (title, cover, description)."""

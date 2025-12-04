@@ -16,7 +16,6 @@ class PlaylistListSerializer(serializers.ModelSerializer):
         if not value:
             return value
 
-        # value может быть InMemoryUploadedFile или похожим
         try:
             img = Image.open(value)
             width, height = img.size
@@ -26,7 +25,6 @@ class PlaylistListSerializer(serializers.ModelSerializer):
         if width != height:
             raise serializers.ValidationError('Обложка плейлиста должна быть квадратной (ширина == высота)')
 
-        # rewind file pointer if needed
         try:
             value.seek(0)
         except Exception:

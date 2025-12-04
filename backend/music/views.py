@@ -175,14 +175,11 @@ class TrackStreamView(APIView):
     def get(self, request, pk):
         track = get_object_or_404(Track, pk=pk)
         
-        # Increment plays_count atomically but avoid double-counting on range requests.
-        # Count only when the request has no Range header or starts from byte 0.
         range_header = request.META.get('HTTP_RANGE', '')
         should_count = False
         if not range_header:
             should_count = True
         else:
-            # Example Range: 'bytes=0-'
             if range_header.startswith('bytes=0'):
                 should_count = True
 
@@ -190,19 +187,15 @@ class TrackStreamView(APIView):
             Track.objects.filter(pk=pk).update(plays_count=F('plays_count') + 1)
 
         try:
-            # Get file path and size
             file_path = track.file.path
             file_size = os.path.getsize(file_path)
             
-            # Get MIME type
             mime, _ = mimetypes.guess_type(track.file.name)
             content_type = mime or 'application/octet-stream'
             
-            # Handle Range requests
             range_header = request.META.get('HTTP_RANGE', '')
             
             if range_header:
-                # Parse range header (e.g., "bytes=0-1023" or "bytes=1024-")
                 try:
                     range_match = range_header.replace('bytes=', '')
                     start, end = range_match.split('-')
@@ -210,11 +203,9 @@ class TrackStreamView(APIView):
                     start = int(start) if start else 0
                     end = int(end) if end else file_size - 1
                     
-                    # Ensure valid range
                     if start < 0 or end >= file_size or start > end:
-                        return HttpResponse(status=416)  # Range Not Satisfiable
+                        return HttpResponse(status=416)
                     
-                    # Open file and create response
                     with open(file_path, 'rb') as f:
                         f.seek(start)
                         content = f.read(end - start + 1)
@@ -227,10 +218,8 @@ class TrackStreamView(APIView):
                     return response
                     
                 except (ValueError, IndexError):
-                    # Invalid range format, serve full file
                     pass
             
-            # Serve full file if no range request
             with open(file_path, 'rb') as f:
                 response = HttpResponse(f.read(), content_type=content_type)
             

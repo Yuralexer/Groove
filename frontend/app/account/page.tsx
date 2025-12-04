@@ -91,6 +91,11 @@ export default function AccountPage() {
                     <button onClick={handleLogout} className={`${styles.btn} ${styles.btnDanger}`}>
                         <LogOut size={18} /> Выйти
                     </button>
+                    {(user as any)?.is_superuser && (
+                        <a href="/admin" className={`${styles.btn} ${styles.btnPrimary}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                            Админка
+                        </a>
+                    )}
                 </div>
 
                 {/* Правая колонка: Формы */}
