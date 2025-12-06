@@ -131,7 +131,6 @@
     background: #19191A;
     border: solid 2px #262528;
     border-radius: 10px;
-    overflow: hidden;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     display: flex;
@@ -169,10 +168,12 @@
 
 .topTrackImage {
     height: 100%;
+    overflow: hidden;
     aspect-ratio: 1/1;
     background-color: #2a2a2a;
     background-size: cover;
     background-position: center;
+    border-radius: 10px 0 0 10px;
 }
 
 .topTrackInfo {

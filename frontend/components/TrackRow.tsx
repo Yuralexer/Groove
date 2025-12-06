@@ -107,30 +107,31 @@ export default function TrackRow({ track, queue, context, showCover = false, sho
     return (
         <div className={styles.row} onClick={() => playTrack(track, queue, context)}>
             <div className={styles.num}>{isCurrent ? '▶' : ''}</div>
-
-            {showCover && (
-                <div className={styles.image} style={{ backgroundImage: track.cover ? `url(${getImageUrl(track.cover)})` : undefined }}>
-                    {!track.cover && '♫'}
-                </div>
-            )}
-
-            <div className={styles.info}>
-                <div className={`${styles.title} ${isCurrent ? styles.activeText : ''}`}>
-                    <Marquee>
-                        {track.title}
-                    </Marquee>
-                </div>
-                {showArtistInfo && (
-                    <div className={styles.artist}>
-                        {track.artist_id ? (
-                            <Link href={`/artist/${track.artist_id}`} className={styles.artistLink} onClick={(e) => e.stopPropagation()}>
-                                <span>{track.artist}</span>
-                            </Link>
-                        ) : (
-                            track.artist || 'Неизвестный'
-                        )}
+            <div className={styles.trackView}>
+                {showCover && (
+                    <div className={styles.image} style={{ backgroundImage: track.cover ? `url(${getImageUrl(track.cover)})` : undefined }}>
+                        {!track.cover && '♫'}
                     </div>
                 )}
+
+                <div className={styles.info}>
+                    <div className={`${styles.title} ${isCurrent ? styles.activeText : ''}`}>
+                        <Marquee>
+                            {track.title}
+                        </Marquee>
+                    </div>
+                    {showArtistInfo && (
+                        <div className={styles.artist}>
+                            {track.artist_id ? (
+                                <Link href={`/artist/${track.artist_id}`} className={styles.artistLink} onClick={(e) => e.stopPropagation()}>
+                                    <span>{track.artist}</span>
+                                </Link>
+                            ) : (
+                                track.artist || 'Неизвестный'
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
 
             <div className={styles.actions} onClick={(e) => e.stopPropagation()}>
