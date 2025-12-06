@@ -67,12 +67,10 @@ export const useAuthStore = create<AuthState>((set) => ({
         }
 
         try {
-            // Try to fetch current user profile from the server
             const res = await api.get('/auth/update-profile/');
             const user = res.data;
             set({ user, isAuthenticated: true, authChecked: true });
         } catch (err) {
-            // Token invalid or expired — clear and mark unauthenticated
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
             set({ user: null, isAuthenticated: false, authChecked: true });

@@ -62,28 +62,23 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
         
         if (queue.length === 0) return;
 
-        // Если активен трек, добавляем его ID в сыгранные
         if (activeTrack) {
             playedTrackIds.add(activeTrack.id);
         }
 
-        // Режим "нет зацикливания"
         if (loopMode === 'no-repeat') {
             if (currentIndex < queue.length - 1) {
                 let nextIndex: number;
                 
                 if (isShuffleEnabled) {
-                    // Получаем список доступных (несыгранных) треков
                     const availableIndices = queue
                         .map((track, idx) => idx)
                         .filter(idx => !playedTrackIds.has(queue[idx].id));
                     
                     if (availableIndices.length === 0) {
-                        // Если все треки сыграны, сбрасываем историю и выбираем из всех
                         playedTrackIds.clear();
                         nextIndex = Math.floor(Math.random() * queue.length);
                     } else {
-                        // Выбираем случайный из доступных
                         nextIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
                     }
                 } else {
@@ -101,22 +96,18 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
             return;
         }
 
-        // Режим "зацикливание плейлиста/альбома"
         if (loopMode === 'repeat-playlist') {
             let nextIndex: number;
             
             if (isShuffleEnabled) {
-                // Получаем список доступных (несыгранных) треков
                 const availableIndices = queue
                     .map((track, idx) => idx)
                     .filter(idx => !playedTrackIds.has(queue[idx].id));
                 
                 if (availableIndices.length === 0) {
-                    // Если все треки сыграны, сбрасываем историю и выбираем из всех
                     playedTrackIds.clear();
                     nextIndex = Math.floor(Math.random() * queue.length);
                 } else {
-                    // Выбираем случайный из доступных
                     nextIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
                 }
             } else {
@@ -133,7 +124,6 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
             return;
         }
 
-        // Режим "зацикливание песни" - просто переигрываем её
         if (loopMode === 'repeat-track') {
             set({
                 activeTrack: get().activeTrack,
@@ -170,12 +160,10 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
         const { queue, currentIndex, loopMode } = get();
         if (queue.length === 0) return false;
         
-        // Если режим зацикливания плейлиста или песни, всегда можно перейти дальше
         if (loopMode === 'repeat-playlist' || loopMode === 'repeat-track') {
             return true;
         }
-        
-        // В режиме "нет зацикливания" можно перейти дальше если не последняя песня
+
         return currentIndex < queue.length - 1;
     },
 
