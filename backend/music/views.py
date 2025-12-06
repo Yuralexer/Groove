@@ -1,6 +1,6 @@
 import random
 import mimetypes
-from django.http import FileResponse, Http404, HttpResponse
+from django.http import Http404, HttpResponse
 import os
 
 from django.db.models import Q, F

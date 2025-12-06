@@ -13,6 +13,7 @@ dependencies = [
     "pillow>=12.0.0",
     "psycopg2-binary>=2.9.11",
     "redis>=7.1.0",
+    "ruff>=0.14.8",
     "uvicorn>=0.38.0",
     "whitenoise>=6.11.0",
 ]

@@ -2,8 +2,6 @@ from rest_framework import serializers
 from .models import Playlist
 from music.serializers import TrackSerializer
 from PIL import Image
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from io import BytesIO
 
 
 class PlaylistListSerializer(serializers.ModelSerializer):
